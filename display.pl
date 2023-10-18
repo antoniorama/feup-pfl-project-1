@@ -67,11 +67,18 @@ matrix_element(Matrix, Row, Col, Element) :-
 display_pieces_square(Board, Line, Col) :-
     matrix_element(Board, Line, Col, none),
     write(' ---- ').
+
 % If the square contains a piece, display the corresponding symbol.
 display_pieces_square(Board, Line, Col) :-
     matrix_element(Board, Line, Col, Square),
     square_to_display(Square, Display),
     write(Display).
+
+% display_square_at(+Line, +Col)
+% Displays the piece that is in Line and Col
+display_square_at(Line, Col) :-
+    board(_, BoardMatrix),
+    display_pieces_square(BoardMatrix, Line, Col).
 
 % Main predicate to display the empty board
 show_board:- 
