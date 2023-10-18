@@ -1,15 +1,17 @@
+:- use_module(library(lists)).
+
 % board(+Matrix)
 % Matrix representing the board
 board(10, [
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, d1_, d1_, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
 	[none, none, none, none, none, none, none, none, none, none]
 ]).
 
@@ -101,6 +103,3 @@ piece_info(4, 2, 4, light_player, piece2_2).
 piece_info(5, 3, 3, light_player, piece3_2).
 piece_info(6, 4, 2, light_player, piece4_2).
 piece_info(7, 6, 1, light_player, piece5_2).
-
-%
-% Display a piece in the board
