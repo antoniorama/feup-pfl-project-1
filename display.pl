@@ -1,39 +1,75 @@
+:- consult(data).
+
+matrix_element(Matrix, Row, Col, Element) :-
+    nth0(Row, Matrix, MatrixRow), 
+    nth0(Col, MatrixRow, Element).
+
+display_pieces_square(Board, Line, Col) :-
+    matrix_element(Board, Line, Col, none),
+    write('    ').
+
+% If the square contains a piece, display the corresponding symbol.
+display_pieces_square(Board, Line, Col) :-
+    matrix_element(Board, Line, Col, Square),
+    square_to_display(Square, Display),
+    write(Display).
+
+% display_square_at(+Line, +Col)
+% Displays the piece that is in Line and Col
+display_square_at(Line, Col) :-
+    board(_, BoardMatrix),
+    display_pieces_square(BoardMatrix, Line, Col).
+
 % Display a bar of '+' and '-'
 display_bar(0) :- write('+\n').
 display_bar(Size) :-
-    write('+---'),
+    write('+----'),
     NewSize is Size - 1,
     display_bar(NewSize).
 
 % Display a row of board cells
-display_row(0, RowNum) :- format("~d\n", [RowNum]).
-display_row(Size, RowNum) :-
-    write('   |'),
+display_row(Board, Size, 9) :-
+    write('00 '),
+    display_row_contents(Board, Size, RowNum).
+
+display_row(Board, Size, RowNum) :-
+    format("~d ", [90-RowNum*10]), 
+    display_row_contents(Board, Size, RowNum).
+
+display_row_contents(Board, 0, RowNum) :-
+    format("| ~d0\n", [RowNum]).
+    
+display_row_contents(Board, Size, RowNum) :-
+    ColNum is 10 - Size, 
+    write('|'),
+    display_pieces_square(Board, RowNum, ColNum),
     NewSize is Size - 1,
-    display_row(NewSize, RowNum).
+    display_row_contents(Board, NewSize, RowNum).
 
 % Display the board
-display_board(-1, _).
-display_board(RowNum, Size) :-
+display_board(Board, 10, _):-
+    write('   '),
+    display_bar(10).
+display_board(Board, RowNum, Size) :-
+    write('   '),
     display_bar(Size),
-    display_row(Size, RowNum),
-    NewRowNum is RowNum - 1,
-    display_board(NewRowNum, Size).
+    display_row(Board, Size, RowNum),
+    NewRowNum is RowNum + 1,
+    display_board(Board, NewRowNum, Size).
 
-% Display the header
-display_header(-1) :- nl.
-display_header(Num) :-
-    format(' ~d ', [Num]),
-    NewNum is Num - 1,
-    display_header(NewNum).
 
-% To reverse the board coordinates as displayed in the image
-reverse_board_coordinates(Size, NewSize) :-
-    NewSize is Size - 1.
+% Display the header coordinates
+display_header_coords :-
+    write('     9    8    7    6    5    4    3    2    1    0\n').
+
+% Display the footer coordinates
+display_footer_coords :-
+    write('     0    1    2    3    4    5    6    7    8    9').
 
 % Test with a board of size 10
 test_display :-
-    Size = 10,
-    reverse_board_coordinates(Size, NewSize),
-    display_header(NewSize),
-    display_board(NewSize, Size).
+    board(_, Board),
+    Size is 10,
+    display_header_coords,
+    display_board(Board, 0, Size),
+    display_footer_coords.
