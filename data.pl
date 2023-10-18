@@ -1,15 +1,17 @@
+:- use_module(library(lists)).
+
 % board(+Matrix)
 % Matrix representing the board
 board(10, [
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
-	[none, none, none, none, none, none, none, none, none, none]
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, d1_, d1_, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
 	[none, none, none, none, none, none, none, none, none, none]
 ]).
 
@@ -102,5 +104,20 @@ piece_info(5, 3, 3, light_player, piece3_2).
 piece_info(6, 4, 2, light_player, piece4_2).
 piece_info(7, 6, 1, light_player, piece5_2).
 
-%
-% Display a piece in the board
+% matrix_element(+Matrix, +Row, +Col, -Element)
+% Retrieves the Element at position (Row, Col) in the Matrix.
+matrix_element(Matrix, Row, Col, Element) :-
+    nth0(Row, Matrix, MatrixRow),  % Get the specified row from the matrix
+    nth0(Col, MatrixRow, Element).  % Get the specified element from the row
+
+% display_pieces_square(+Board,+Line,+Col)
+% Displays the piece at a specified position (Line and Col) on the Board
+% If the square is none, display ' ---- '.
+display_pieces_square(Board, Line, Col) :-
+    matrix_element(Board, Line, Col, none),
+    write(' ---- ').
+% If the square contains a piece, display the corresponding symbol.
+display_pieces_square(Board, Line, Col) :-
+    matrix_element(Board, Line, Col, Square),
+    square_to_display(Square, Display),
+    write(Display).
