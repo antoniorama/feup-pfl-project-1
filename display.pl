@@ -1,3 +1,5 @@
+:- consult(data).
+
 % display_coordinates_bottom(+Length)
 % Displays the pattern '1  2  3  4  ... Length'
 % For our board should be dispalyed with length 9
@@ -52,6 +54,24 @@ display_board(Line, Size):-
     display_bar(Size),
     NextLine is Line - 10,
     display_board(NextLine, Size).
+
+% matrix_element(+Matrix, +Row, +Col, -Element)
+% Retrieves the Element at position (Row, Col) in the Matrix.
+matrix_element(Matrix, Row, Col, Element) :-
+    nth0(Row, Matrix, MatrixRow),  % Get the specified row from the matrix
+    nth0(Col, MatrixRow, Element).  % Get the specified element from the row
+
+% display_pieces_square(+Board,+Line,+Col)
+% Displays the piece at a specified position (Line and Col) on the Board
+% If the square is none, display ' ---- '.
+display_pieces_square(Board, Line, Col) :-
+    matrix_element(Board, Line, Col, none),
+    write(' ---- ').
+% If the square contains a piece, display the corresponding symbol.
+display_pieces_square(Board, Line, Col) :-
+    matrix_element(Board, Line, Col, Square),
+    square_to_display(Square, Display),
+    write(Display).
 
 % Main predicate to display the empty board
 show_board:- 
