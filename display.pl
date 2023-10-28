@@ -58,13 +58,12 @@ display_board(Board, RowNum, Size) :-
     display_board(Board, NewRowNum, Size).
 
 
-% Display the header coordinates
-display_header_coords :-
-    write('     9    8    7    6    5    4    3    2    1    0\n').
-
-% Display the footer coordinates
-display_footer_coords :-
-    write('     0    1    2    3    4    5    6    7    8    9').
+% Display the header
+display_header(-1, _) :- nl.
+display_header(Num, MaxNum) :-
+    (Num =:= MaxNum -> format("  ~d", [Num]); format('  ~d', [Num])),
+    NewNum is Num - 1,
+    display_header(NewNum, MaxNum).
 
 % Test with a board of size 10
 test_display :-
