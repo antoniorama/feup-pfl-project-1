@@ -1,4 +1,6 @@
 :- consult(data).
+:- consult(logic).
+:- consult(utils).
 
 matrix_element(Matrix, Row, Col, Element) :-
     nth0(Row, Matrix, MatrixRow), 
