@@ -51,7 +51,8 @@ display_row_contents(Board, Size, RowNum) :-
     display_row_contents(Board, NewSize, RowNum).
 
 % Display the board
-display_board(Board, 10, _):- !. % Just terminate without doing anything.
+display_board(Board, 10, _):- 
+    display_bar(10, _).
 display_board(Board, RowNum, Size) :-
     display_bar(Size, Size),
     display_row(Board, Size, RowNum),
@@ -59,28 +60,35 @@ display_board(Board, RowNum, Size) :-
     display_board(Board, NewRowNum, Size).
 
 % Display the header coords from N to 0
-display_header_coords(-1) :- nl.
-display_header_coords(Num) :-
+display_header_coords(-1, _) :- nl.
+display_header_coords(Num, Counter) :-
+    Num = Counter,
+    write(' '),
+    NewNum is Num - 1,
+    display_header_coords(NewNum, Counter).
+display_header_coords(Num, Counter) :-
     format("    ~d", [Num]),
     NewNum is Num - 1,
-    display_header_coords(NewNum).
+    display_header_coords(NewNum, Counter).
 	
 % Display the footer coords from 0 to N
-display_footer_coords(N):- 
+display_footer_coords(N, Counter):- 
 	N < 0.
-display_footer_coords(N) :-
+display_footer_coords(N, Counter) :-
+    N = Counter,
+    write(' '),
+    NewN is N - 1,
+    display_footer_coords(NewN, Counter).
+display_footer_coords(N, Counter) :-
 	N >= 0,
     NewN is N - 1,
-    display_footer_coords(NewN),
+    display_footer_coords(NewN, Counter),
 	format("    ~d", [N]).
 
 % Test with a board of size 10
 test_display :-
     board(_, Board),
     Size is 10,
-	write(' '),
-    display_header_coords(Size - 1),
+    display_header_coords(Size, Size),
     display_board(Board, 0, Size),
-    display_bar(Size, Size),
-    write(' '),
-    display_footer_coords(Size - 1).
+    display_footer_coords(Size, Size).
