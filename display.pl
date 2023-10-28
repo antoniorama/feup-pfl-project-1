@@ -21,19 +21,23 @@ display_square_at(Line, Col) :-
     display_pieces_square(BoardMatrix, Line, Col).
 
 % Display a bar of '+' and '-'
-display_bar(0) :- write('+\n').
-display_bar(Size) :-
+display_bar(0, _) :- write('+\n').
+
+display_bar(Size, Counter) :-
+    Size = Counter,
+    write('   '),
     write('+----'),
     NewSize is Size - 1,
-    display_bar(NewSize).
+    display_bar(NewSize, Counter).
+
+display_bar(Size, Counter) :-
+    write('+----'),
+    NewSize is Size - 1,
+    display_bar(NewSize, Counter).
 
 % Display a row of board cells
-display_row(Board, Size, 9) :-
-    write('00 '),
-    display_row_contents(Board, Size, RowNum).
-
 display_row(Board, Size, RowNum) :-
-    format("~d ", [90-RowNum*10]), 
+    format("~d0 ", [9-RowNum]), 
     display_row_contents(Board, Size, RowNum).
 
 display_row_contents(Board, 0, RowNum) :-
@@ -47,28 +51,36 @@ display_row_contents(Board, Size, RowNum) :-
     display_row_contents(Board, NewSize, RowNum).
 
 % Display the board
-display_board(Board, 10, _):-
-    write('   '),
-    display_bar(10).
+display_board(Board, 10, _):- !. % Just terminate without doing anything.
 display_board(Board, RowNum, Size) :-
-    write('   '),
-    display_bar(Size),
+    display_bar(Size, Size),
     display_row(Board, Size, RowNum),
     NewRowNum is RowNum + 1,
     display_board(Board, NewRowNum, Size).
 
-
-% Display the header
-display_header(-1, _) :- nl.
-display_header(Num, MaxNum) :-
-    (Num =:= MaxNum -> format("  ~d", [Num]); format('  ~d', [Num])),
+% Display the header coords from N to 0
+display_header_coords(-1) :- nl.
+display_header_coords(Num) :-
+    format("    ~d", [Num]),
     NewNum is Num - 1,
-    display_header(NewNum, MaxNum).
+    display_header_coords(NewNum).
+	
+% Display the footer coords from 0 to N
+display_footer_coords(N):- 
+	N < 0.
+display_footer_coords(N) :-
+	N >= 0,
+    NewN is N - 1,
+    display_footer_coords(NewN),
+	format("    ~d", [N]).
 
 % Test with a board of size 10
 test_display :-
     board(_, Board),
     Size is 10,
-    display_header_coords,
+	write(' '),
+    display_header_coords(Size - 1),
     display_board(Board, 0, Size),
-    display_footer_coords.
+    display_bar(Size, Size),
+    write(' '),
+    display_footer_coords(Size - 1).
