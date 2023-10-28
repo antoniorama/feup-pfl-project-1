@@ -5,6 +5,7 @@ element_at(Board, Pos, Element) :-
     Col is Pos mod 10,
     nth0(Row, Board, BoardRow),
     nth0(Col, BoardRow, Element),
+    
 % Define another predicate to check if the element is different from none
 is_not_none(Board, Pos) :-
     RowPart is Pos // 10,
