@@ -31,13 +31,34 @@ canBePlayed(Board, StartPos, View, Direction, Piece) :-
 place_piece(Board, StartPos, Direction, View, Piece, NewBoard):-
     View = 'light',
     canBePlayed(Board, StartPos, Direction, Piece),
-    StartX is Start // 10,
-    StartY is Start mod 10,
+    StartX is StartPos // 10,
+    StartY is StartPos mod 10.
 
 place_piece(Board, StartPos, Direction, View, Piece, NewBoard):-
     View = 'dark',
     canBePlayed(Board, StartPos, Direction, Piece),
-    StartX is Start // 10,
-    StartY is Start mod 10,
+    DarkPos is 99 - StartPos,
+    StartX is DarkPos // 10,
+    StartY is DarkPos mod 10.
 
-place_horizontal(Matrix, Value, )
+% place_horizontal(+Matrix, +Value, +X, +Y, +Length, -NewMatrix)
+% places a piece (group of squares) horinzontally in the board
+place_horizontal(Matrix, Value, X, Y, Length, NewMatrix):-
+    place_horizontal(Matrix, Value, X, Y, Length, 0, NewMatrix).
+
+place_horizontal(Matrix, _, _, _, Length, Counter, Matrix):-
+    Counter >= Length.
+
+place_horizontal(Matrix, Value, X, Y, Length, Counter, NewMatrix):-
+    Counter < Length,
+    place_in_matrix(Matrix, X, Y, Value, TempMatrix),
+    NewY is Y + 1,
+    NewCounter is Counter + 1,
+    place_horizontal(TempMatrix, Value, X, NewY, Length, NewCounter, NewMatrix).
+
+test_place_horizontal:-
+    board(_, Board),
+    place_horizontal(Board, 'd2_', 4, 5, 5, NewMatrix),
+    display_header_coords(10, 10),
+    display_board(NewMatrix, 9, 10),
+    display_footer_coords(10, 10).

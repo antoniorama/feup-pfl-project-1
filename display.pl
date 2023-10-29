@@ -39,11 +39,11 @@ display_bar(Size, Counter) :-
 
 % Display a row of board cells
 display_row(Board, Size, RowNum) :-
-    format("~d0 ", [9-RowNum]), 
+    format("~d0 ", [RowNum]), 
     display_row_contents(Board, Size, RowNum).
 
 display_row_contents(Board, 0, RowNum) :-
-    format("| ~d0\n", [RowNum]).
+    format("| ~d0\n", [9-RowNum]).
     
 display_row_contents(Board, Size, RowNum) :-
     ColNum is 10 - Size, 
@@ -53,12 +53,12 @@ display_row_contents(Board, Size, RowNum) :-
     display_row_contents(Board, NewSize, RowNum).
 
 % Display the board
-display_board(Board, 10, _):- 
+display_board(Board, -1, _):-  %
     display_bar(10, _).
 display_board(Board, RowNum, Size) :-
     display_bar(Size, Size),
-    display_row(Board, Size, RowNum),
-    NewRowNum is RowNum + 1,
+    display_row(Board, Size, RowNum),  
+    NewRowNum is RowNum - 1,
     display_board(Board, NewRowNum, Size).
 
 % Display the header coords from N to 0
@@ -91,6 +91,7 @@ display_footer_coords(N, Counter) :-
 test_display :-
     board(_, Board),
     Size is 10,
+    SizeMinusOne is Size - 1,
     display_header_coords(Size, Size),
-    display_board(Board, 0, Size),
+    display_board(Board, SizeMinusOne, Size),
     display_footer_coords(Size, Size).
