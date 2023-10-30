@@ -17,23 +17,23 @@ board(10, [
 
 % square_info(?Player, ?Value, ?ScoreCounter, ?Square)
 % Information about a square that is part of a piece
-square_info('dark_player', 1, none , d1_).
-square_info('dark_player', 2, none, d2_).
-square_info('dark_player', 3, none, d3_).
-square_info('dark_player', 4, none, d4_).
-square_info('dark_player', 6, none, d5_).
+square_info(dark_player, 1, none , d1_).
+square_info(dark_player, 2, none, d2_).
+square_info(dark_player, 3, none, d3_).
+square_info(dark_player, 4, none, d4_).
+square_info(dark_player, 6, none, d5_).
 
-square_info('dark_player', 1, sc_dark, d1S).
-square_info('dark_player', 2, sc_dark, d2S).
-square_info('dark_player', 3, sc_dark, d3S).
-square_info('dark_player', 4, sc_dark, d4S).
-square_info('dark_player', 6, sc_dark, d6S).
+square_info(dark_player, 1, sc_dark, d1S).
+square_info(dark_player, 2, sc_dark, d2S).
+square_info(dark_player, 3, sc_dark, d3S).
+square_info(dark_player, 4, sc_dark, d4S).
+square_info(dark_player, 6, sc_dark, d6S).
 
-square_info('dark_player', 1, sc_light, d1s).
-square_info('dark_player', 2, sc_light, d2s).
-square_info('dark_player', 3, sc_light, d3s).
-square_info('dark_player', 4, sc_light, d4s).
-square_info('dark_player', 6, sc_light, d6s).
+square_info(dark_player, 1, sc_light, d1s).
+square_info(dark_player, 2, sc_light, d2s).
+square_info(dark_player, 3, sc_light, d3s).
+square_info(dark_player, 4, sc_light, d4s).
+square_info(dark_player, 6, sc_light, d6s).
 
 square_info(light_player, 1, none, l1_).
 square_info(light_player, 2, none, l2_).
@@ -92,17 +92,17 @@ square_to_display(l6s, 's B6').
 
 % piece_info(?N_Squares, ?Value, ?StartAmmount, ?Player, +PieceName)
 % Information of a piece that contains multiple squares
-piece_info(3, 1, 5, 'dark_player', piece1_1).
-piece_info(4, 2, 4, 'dark_player', piece2_1).
-piece_info(5, 3, 3, 'dark_player', piece3_1).
-piece_info(6, 4, 2, 'dark_player', piece4_1).
-piece_info(7, 6, 1, 'dark_player', piece6_1).
+piece_info(3, 1, 5, dark_player, piece1_1).
+piece_info(4, 2, 4, dark_player, piece2_1).
+piece_info(5, 3, 3, dark_player, piece3_1).
+piece_info(6, 4, 2, dark_player, piece4_1).
+piece_info(7, 6, 1, dark_player, piece6_1).
 
 piece_info(3, 1, 5, light_player, piece1_2).
 piece_info(4, 2, 4, light_player, piece2_2).
 piece_info(5, 3, 3, light_player, piece3_2).
 piece_info(6, 4, 2, light_player, piece4_2).
-piece_info(7, 6, 1, light_player, piece5_2).
+piece_info(7, 6, 1, light_player, piece6_2).
 
 % piece_default_square(?PieceName, ?DefaultSquare)
 piece_default_square(piece1_1, d1_).
@@ -112,3 +112,7 @@ piece_default_square(piece4_1, d4_).
 piece_default_square(piece6_1, d6_).
 
 piece_default_square(piece1_2, l1_).
+piece_default_square(piece2_2, l2_).
+piece_default_square(piece3_2, l3_).
+piece_default_square(piece4_2, l4_).
+piece_default_square(piece6_2, l6_).
