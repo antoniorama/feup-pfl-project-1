@@ -15,7 +15,7 @@ initial_state([0, [PlacementPhasePiecesDark, 0, 0], [PlacementPhasePiecesLight, 
 	initial_dark_pieces(InitialDarkPieces),
 	append(InitialDarkPieces, [], PlacementPhasePiecesDark),
 	initial_light_pieces(InitialLightPieces),
-	append(InitialDarkPieces, [], PlacementPhasePiecesDark).
+	append(InitialLightPieces, [], PlacementPhasePiecesLight).
 
 % game_loop(+State) continues the game until a termination condition is met
 % game_loop(State) :-
@@ -30,16 +30,14 @@ game_loop(State) :-
 
 	display_turn(State),
     
+	repeat,
     % Get the current player’s move
     get_move(State, Move),
-
-	print_list(Move),
     
     % Update the game state based on the move
-    update_state(State, Move, NewState),
+    update_state(State, Move, NewState), !,
     
     % Continue the game loop with the new state
-	print_list(NewState),
     game_loop(NewState).
 
 % display_turn(+State)
@@ -57,7 +55,7 @@ show_player_pieces([0, [[Piece | RestPieces], _, _], _, _]) :-
     show_player_piece(Piece),  
     show_player_pieces([0, [RestPieces, _, _], _, _]).  % Recursively process the remaining pieces
 
-show_player_pieces([1, [[], _, _], _, _]).
+show_player_pieces([1, _, [[], _, _], _]).
 
 show_player_pieces([1, _, [[Piece | RestPieces], _, _], _]) :-
     show_player_piece(Piece),  
