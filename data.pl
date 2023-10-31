@@ -3,16 +3,16 @@
 % board(+Matrix)
 % Matrix representing the board
 board(10, [
-	[none, none, d3_, none, d3_, none, none, none, none, none],
-	[none, d1_, d1_, none, none, none, none, none, none, none],
 	[none, none, none, none, none, none, none, none, none, none],
 	[none, none, none, none, none, none, none, none, none, none],
 	[none, none, none, none, none, none, none, none, none, none],
 	[none, none, none, none, none, none, none, none, none, none],
 	[none, none, none, none, none, none, none, none, none, none],
-	[none, none, none, none, d2s, d2s, d2s, none, none, none],
-	[none, none, none, none, none, none, none, none, d3s, d3_],
-	[none, none, none, none, none, none, none, none, d3s, d3s]
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none]
 ]).
 
 % square_info(?Player, ?Value, ?ScoreCounter, ?Square)
@@ -104,6 +104,9 @@ piece_info(5, 3, 3, light_player, piece3_2).
 piece_info(6, 4, 2, light_player, piece4_2).
 piece_info(7, 6, 1, light_player, piece6_2).
 
+initial_dark_pieces([piece1_1, piece1_1, piece1_1, piece1_1, piece1_1, piece2_1, piece2_1, piece2_1, piece2_1, piece3_1, piece3_1, piece3_1, piece4_1, piece4_1, piece6_1]).
+initial_light_pieces([piece1_2, piece1_2, piece1_2, piece1_2, piece1_2, piece2_2, piece2_2, piece2_2, piece2_2, piece3_2, piece3_2, piece3_2, piece4_2, piece4_2, piece6_2]).
+
 % piece_default_square(?PieceName, ?DefaultSquare)
 piece_default_square(piece1_1, d1_).
 piece_default_square(piece2_1, d2_).
@@ -116,3 +119,11 @@ piece_default_square(piece2_2, l2_).
 piece_default_square(piece3_2, l3_).
 piece_default_square(piece4_2, l4_).
 piece_default_square(piece6_2, l6_).
+
+% player_info(?Name, ?TurnNO)
+player_turn(dark_player, 0).
+player_turn(light_player, 1).
+
+% swap_turn(?CurrentTurn, ?NextTurn)
+swap_turn(0, 1).
+swap_turn(1, 0).

@@ -25,7 +25,6 @@ calculateEndPos(StartPos, vertical, Piece, EndPos):-
     EndPos is StartPos + Length * 10 - 10.
     
 canBePlayed(Board, StartPos, Direction, Piece) :-
-    piece_info(Length, _, _, _, Piece),
     calculateEndPos(StartPos, Direction, Piece, EndPos),
     canBePlayedHelper(Board, StartPos, EndPos, Direction).
 
@@ -76,7 +75,7 @@ place_direction(Matrix, Value, X, Y, Length, NewMatrix, vertical):-
 
 % place_horizontal(+Matrix, +Value, +X, +Y, +Length, -NewMatrix)
 % places a piece (group of squares) horinzontally in the board
-place_horizontal(Matrix, Value, X, Y, 0, Matrix):- !.
+place_horizontal(Matrix, _, _, _, 0, Matrix):- !.
 place_horizontal(Matrix, Value, X, Y, Length, NewMatrix):-
     place_in_matrix(Matrix, X, Y, Value, TempMatrix),
     NewY is Y + 1,
@@ -85,7 +84,7 @@ place_horizontal(Matrix, Value, X, Y, Length, NewMatrix):-
 
 % place_vertical(+Matrix, +Value, +X, +Y, +Length, -NewMatrix)
 % places a piece (group of squares) vertically in the board
-place_vertical(Matrix, Value, X, Y, 0, Matrix):- !.
+place_vertical(Matrix, _, _, _, 0, Matrix):- !.
 place_vertical(Matrix, Value, X, Y, Length, NewMatrix):-
     place_in_matrix(Matrix, X, Y, Value, TempMatrix),
     NewX is X - 1,

@@ -1,7 +1,3 @@
-:- consult(data).
-:- consult(logic).
-:- consult(utils).
-
 matrix_element(Matrix, Row, Col, Element) :-
     nth0(Row, Matrix, MatrixRow), 
     nth0(Col, MatrixRow, Element).
@@ -42,7 +38,7 @@ display_row(Board, Size, RowNum) :-
     format("~d0 ", [RowNum]), 
     display_row_contents(Board, Size, RowNum).
 
-display_row_contents(Board, 0, RowNum) :-
+display_row_contents(_, 0, RowNum) :-
     format("| ~d0\n", [9-RowNum]).
     
 display_row_contents(Board, Size, RowNum) :-
@@ -53,7 +49,7 @@ display_row_contents(Board, Size, RowNum) :-
     display_row_contents(Board, NewSize, RowNum).
 
 % Display the board
-display_board(Board, -1, _):-  %
+display_board(_, -1, _):-  %
     display_bar(10, _).
 display_board(Board, RowNum, Size) :-
     display_bar(Size, Size),
@@ -74,7 +70,7 @@ display_header_coords(Num, Counter) :-
     display_header_coords(NewNum, Counter).
 	
 % Display the footer coords from 0 to N
-display_footer_coords(N, Counter):- 
+display_footer_coords(N, _):- 
 	N < 0.
 display_footer_coords(N, Counter) :-
     N = Counter,
@@ -86,12 +82,3 @@ display_footer_coords(N, Counter) :-
     NewN is N - 1,
     display_footer_coords(NewN, Counter),
 	format("    ~d", [N]).
-
-% Test with a board of size 10
-test_display :-
-    board(_, Board),
-    Size is 10,
-    SizeMinusOne is Size - 1,
-    display_header_coords(Size, Size),
-    display_board(Board, SizeMinusOne, Size),
-    display_footer_coords(Size, Size).
