@@ -46,9 +46,43 @@ canBePlayedHelper(Board, StartPos, EndPos, vertical) :-
     is_none(Board, StartPos),
     NextPos is StartPos + 10,
     canBePlayedHelper(Board, NextPos, EndPos, vertical).
+
 test_funfun:-
     board(_, Board),
     canBePlayed(Board, 98, horizontal, piece1_2).
+
+firstElement([Head|_], Head).
+
+%canPlaceAnyPiece(+Board, +PieceList)
+%tries to place smaller piece
+canPlaceAPiece(Board, light_player, PieceList):-
+    firstElement(PieceList, firstPiece),
+    piece_info(Length, _, _, _, firstPiece),
+    StartPos is 90,
+    EndPos is 09,
+    canPlaceAPieceHelper(Board, light_player, StartPos, EndPos).
+
+canPlaceAPieceHelper(Board, light_player, StartPos, EndPos):-
+    calculate_position(light_player, StartPos, StartX, StartY),
+    calculate_position(light_player, EndPos, EndX, EndY),
+    StartX > EndX, !.
+    StartY > EndY, !.
+ 
+canPlaceAPieceHelper(Board, light_player, StartPos, EndPos):-
+    calculate_position(light_player, StartPos, StartX, StartY),
+    calculate_position(light_player, EndPos, EndX, EndY),
+    StartX =:= EndX,
+    StartY =:= EndY,
+    canBePlayed(Board, StartPos, horizontal, Piece), !.
+
+canPlaceAPieceHelper(Board, light_player, StartPos, EndPos):-
+    calculate_position(light_player, StartPos, StartX, StartY),
+    calculate_position(light_player, EndPos, EndX, EndY),
+    StartX <= EndX,
+    StartY <= EndY,
+    NextPos is StartPos - 1,
+    canBePlayed(Board, NextPos, vertical, Piece).
+    
 
 % place_piece(+Board, +StartPos, +Direction, +Player, +Piece, -NewBoard)
 % Places a piece in the board
