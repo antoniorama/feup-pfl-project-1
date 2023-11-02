@@ -21,6 +21,17 @@ calculate_position(dark_player, StartPos, X, Y):-
     X is DarkPos // 10,
     Y is DarkPos mod 10.
 
+calculate_position_new(light_player, StartPos, X, Y):-
+    Y is StartPos // 10,
+    X is StartPos mod 10.
+
+% calculate_pos_to_pos(+Player, +Pos, -NewPos)
+calculate_pos_to_pos(light_player, Pos, NewPos):-
+    NewPos is Pos.
+
+calculate_pos_to_pos(dark_player, Pos, NewPos):-
+    NewPos is 99 - Pos.
+
 % delete_element_from_list(+Element, +List, -NewList)
 delete_element_from_list(Element, List, NewList) :-
     select(Element, List, NewList).

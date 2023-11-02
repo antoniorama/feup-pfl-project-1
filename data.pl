@@ -2,6 +2,8 @@
 
 % board(+Matrix)
 % Matrix representing the board
+
+% the boards are represented according to white coordinates
 board(10, [
 	[none, none, none, none, none, none, none, none, none, none],
 	[none, none, none, none, none, none, none, none, none, none],
@@ -13,6 +15,19 @@ board(10, [
 	[none, none, none, none, none, none, none, none, none, none],
 	[none, none, none, none, none, none, none, none, none, none],
 	[none, none, none, none, none, none, none, none, none, none]
+]).
+
+test_board(10, [
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[d6_, d6_, d6_, d6_, d6_, d6_, d6_, none, none, none]
 ]).
 
 % square_info(?Player, ?Value, ?ScoreCounter, ?Square)

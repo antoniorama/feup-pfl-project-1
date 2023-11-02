@@ -13,17 +13,16 @@ test_fun:-
     board(_, Board),
     is_none(Board, 90).
 
-% Checks if there is already a piece in those positions. use length. if start coordinates and end coordinates are diagonal it doesn't allow either
-% canBePlayed(+Board, +StartPos, +View, +Direction, +Piece) :-
-
 calculateEndPos(StartPos, horizontal, Piece, EndPos):-
     piece_info(Length, _, _, _, Piece),
     EndPos is StartPos + Length - 1.
 
 calculateEndPos(StartPos, vertical, Piece, EndPos):-
     piece_info(Length, _, _, _, Piece),
-    EndPos is StartPos + Length * 10 - 10.
+    EndPos is StartPos - ( (Length - 1) * 10).
     
+% Checks if there is already a piece in those positions. use length. if start coordinates and end coordinates are diagonal it doesn't allow either
+% canBePlayed(+Board, +StartPos, +View, +Direction, +Piece)
 canBePlayed(Board, StartPos, Direction, Piece) :-
     calculateEndPos(StartPos, Direction, Piece, EndPos),
     canBePlayedHelper(Board, StartPos, EndPos, Direction).
@@ -48,47 +47,44 @@ canBePlayedHelper(Board, StartPos, EndPos, vertical) :-
     canBePlayedHelper(Board, NextPos, EndPos, vertical).
 
 test_funfun:-
-    board(_, Board),
-    canBePlayed(Board, 98, horizontal, piece1_2).
+    test_board(_, Board),
+    canBePlayed(Board, 99, vertical, piece6_2).
 
+% firstElement(+PieceList, -Piece)
 firstElement([Head|_], Head).
 
-%canPlaceAnyPiece(+Board, +PieceList)
-%tries to place smaller piece
-canPlaceAPiece(Board, light_player, PieceList):-
-    firstElement(PieceList, firstPiece),
-    piece_info(Length, _, _, _, firstPiece),
-    StartPos is 90,
-    EndPos is 09,
-    canPlaceAPieceHelper(Board, light_player, StartPos, EndPos).
+% canPlaceAPiece(+Board, +PieceList)
+% tries to place smaller piece
+canPlaceAPiece(Board, PieceList):-
+    firstElement(PieceList, FirstPiece),
+    StartPos is 0,
+    EndPos is 99,
+    canPlaceAPieceHelper(Board, StartPos, EndPos, FirstPiece).
 
-canPlaceAPieceHelper(Board, light_player, StartPos, EndPos):-
-    calculate_position(light_player, StartPos, StartX, StartY),
-    calculate_position(light_player, EndPos, EndX, EndY),
-    StartX > EndX, !.
-    StartY > EndY, !.
- 
-canPlaceAPieceHelper(Board, light_player, StartPos, EndPos):-
-    calculate_position(light_player, StartPos, StartX, StartY),
-    calculate_position(light_player, EndPos, EndX, EndY),
-    StartX =:= EndX,
-    StartY =:= EndY,
-    canBePlayed(Board, StartPos, horizontal, Piece), !.
+% Check horizontal and vertical placement at the current position
+canPlaceAPieceHelper(Board, StartPos, _, FirstPiece):-
+    canBePlayed(Board, StartPos, horizontal, FirstPiece), !.
+canPlaceAPieceHelper(Board, StartPos, _, FirstPiece):-
+    canBePlayed(Board, StartPos, vertical, FirstPiece), !.
 
-canPlaceAPieceHelper(Board, light_player, StartPos, EndPos):-
-    calculate_position(light_player, StartPos, StartX, StartY),
-    calculate_position(light_player, EndPos, EndX, EndY),
-    StartX <= EndX,
-    StartY <= EndY,
-    NextPos is StartPos - 1,
-    canBePlayed(Board, NextPos, vertical, Piece).
-    
+% Recursive case: proceed to next position if no placement has been made
+canPlaceAPieceHelper(Board, StartPos, EndPos, FirstPiece):-
+    StartPos < EndPos,
+    NextPos is StartPos + 1,
+    canPlaceAPieceHelper(Board, NextPos, EndPos, FirstPiece).
+
+can_place_piece_test :-
+    test_board(_, Board),
+    % trace,
+    % display_board(Board, 9, 10).
+    canPlaceAPiece(Board, [piece2_1, piece2_1, piece2_1, piece2_1, piece3_1, piece3_1, piece3_1, piece4_1, piece4_1, piece6_1]).
 
 % place_piece(+Board, +StartPos, +Direction, +Player, +Piece, -NewBoard)
 % Places a piece in the board
 place_piece(Board, StartPos, Direction, Player, Piece, NewBoard):-
-    canBePlayed(Board, StartPos, Direction, Piece),
     calculate_position(Player, StartPos, StartX, StartY),
+    calculate_pos_to_pos(Player, StartPos, NewPos),
+    canBePlayed(Board, NewPos, Direction, Piece),
     piece_info(NSquares, _, _, Player, Piece),
     piece_default_square(Piece, DefaultSquare),
     format("Square Display: ~w  NSquares: ~d  StartX: ~d  StartY: ~d \n" ,[DefaultSquare, NSquares, StartX, StartY]),
@@ -131,3 +127,16 @@ test_place_horizontal:-
     display_header_coords(10, 10),
     display_board(NewMatrix, 9, 10),
     display_footer_coords(10, 10).
+
+
+
+
+
+%Scoring phase
+%PlaceScoreCounter(+Player)
+
+% PlaceScoringPlayer(Player):-
+%     calculate_position(Player, 00, StartX, StartY),
+    
+    
+
