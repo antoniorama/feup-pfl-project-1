@@ -24,7 +24,7 @@ test_board(10, [
 	[d6_, d6_, d6_, d6_, d6_, none, d6_, d6_, none, d6_],
 	[d6_, none, d6_, d6_, none, d6_, d6_, none, d6_, d6_],
 	[d6_, d6_, none, d6_, d6_, d6_, none, d6_, none, d6_],
-	[d6_, none, d6_, d6_, d6_, none, d6_, none, none, d6_],
+	[none, none, none, none, none, none, none, none, none, d6_],
 	[d6_, d6_, d6_, d6_, none, d6_, d6_, none, d6_, d6_],
 	[d6_, d6_, d6_, none, d6_, none, none, d6_, none, d6_],
 	[d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_]

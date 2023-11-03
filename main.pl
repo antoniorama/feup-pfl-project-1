@@ -11,7 +11,7 @@ play :-
 % initial_state(-State)
 % initialize the state with turn to dark_player (0) and placement phase pieces
 initial_state([0, [PlacementPhasePiecesDark, 0, 0], [PlacementPhasePiecesLight, 0, 0], Board]) :-
-	board(_, Board),
+	test_board(_, Board),
 	initial_dark_pieces(InitialDarkPieces),
 	append(InitialDarkPieces, [], PlacementPhasePiecesDark),
 	initial_light_pieces(InitialLightPieces),
@@ -74,28 +74,25 @@ choose_move(State, Move) :-
 	append([UserInputPiece, UserInputSquare, UserInputDirection], [], Move).
 
 % Clause for when canPlaceAPiece succeeds for light_player
-get_new_state([0, [PlacementPhasePiecesDark, _, _], [PlacementPhasePiecesLight, _, _], _], PlayedPiece, NewBoard, NewState) :-
+get_new_state([0, [PlacementPhasePiecesDark, _, _], [PlacementPhasePiecesLight, _, _], _], PlayedPiece, NewBoard, [1, [NewList, 0, 0], [PlacementPhasePiecesLight, 0, 0], NewBoard]) :-
     delete_element_from_list(PlayedPiece, PlacementPhasePiecesDark, NewList),
-    canPlaceAPiece(NewBoard, PlacementPhasePiecesLight), 
-    NewState = [1, [NewList, 0, 0], [PlacementPhasePiecesLight, 0, 0], NewBoard].
+    canPlaceAPiece(NewBoard, PlacementPhasePiecesLight).
 
 % Clause for when canPlaceAPiece fails for light_player
-get_new_state([0, [PlacementPhasePiecesDark, _, _], [PlacementPhasePiecesLight, _, _], _], PlayedPiece, NewBoard, NewState) :-
+get_new_state([0, [PlacementPhasePiecesDark, _, _], [PlacementPhasePiecesLight, _, _], _], PlayedPiece, NewBoard, [0, [NewList, 0, 0], [PlacementPhasePiecesLight, 0, 0], NewBoard]) :-
     delete_element_from_list(PlayedPiece, PlacementPhasePiecesDark, NewList),
-    \+ canPlaceAPiece(NewBoard, PlacementPhasePiecesLight), 
-    NewState = [0, [NewList, 0, 0], [PlacementPhasePiecesLight, 0, 0], NewBoard].
+    \+ canPlaceAPiece(NewBoard, PlacementPhasePiecesLight).
 
 % Clause for when canPlaceAPiece succeeds for dark_player
-get_new_state([1, [PlacementPhasePiecesDark, _, _], [PlacementPhasePiecesLight, _, _], _], PlayedPiece, NewBoard, NewState) :-
+get_new_state([1, [PlacementPhasePiecesDark, _, _], [PlacementPhasePiecesLight, _, _], _], PlayedPiece, NewBoard, [0, [PlacementPhasePiecesDark, 0, 0], [NewList, 0, 0], NewBoard]) :-
 	delete_element_from_list(PlayedPiece, PlacementPhasePiecesLight, NewList),
-	canPlaceAPiece(NewBoard, PlacementPhasePiecesDark), 
-	NewState = [0, [PlacementPhasePiecesDark, 0, 0], [NewList, 0, 0], NewBoard].
+	canPlaceAPiece(NewBoard, PlacementPhasePiecesDark).
 
 % Clause for when canPlaceAPiece fails for dark_player
-get_new_state([1, [PlacementPhasePiecesDark, _, _], [PlacementPhasePiecesLight, _, _], _], PlayedPiece, NewBoard, NewState) :-
+get_new_state([1, [PlacementPhasePiecesDark, _, _], [PlacementPhasePiecesLight, _, _], _], PlayedPiece, NewBoard, [1, [PlacementPhasePiecesDark, 0, 0], [NewList, 0, 0], NewBoard]) :-
 	delete_element_from_list(PlayedPiece, PlacementPhasePiecesLight, NewList),
-	\+ canPlaceAPiece(NewBoard, PlacementPhasePiecesDark), 
-	NewState = [1, [PlacementPhasePiecesDark, 0, 0], [NewList, 0, 0], NewBoard].
+	\+ canPlaceAPiece(NewBoard, PlacementPhasePiecesDark).
+
 
 % move(+State, +Move, -NewState)
 % Update the game state based on the move
