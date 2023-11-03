@@ -69,7 +69,6 @@ canBePlayedHelper(Board, StartPos, EndPos, vertical) :-
 
 test_funfun:-
     board(_, Board),
-    % trace,
     canBePlayed(Board, 65, vertical, piece2_1).
 
 % firstElement(+PieceList, -Piece)
@@ -97,13 +96,10 @@ canPlaceAPieceHelper(Board, StartPos, EndPos, FirstPiece):-
 
 can_place_piece_test :-
     test_board(_, Board),
-    % trace,
-    % display_board(Board, 9, 10).
-    % trace,
     canPlaceAPiece(Board, [piece2_1, piece2_1, piece2_1, piece2_1, piece3_1, piece3_1, piece3_1, piece4_1, piece4_1, piece6_1]).
 
 % place_piece(+Board, +StartPos, +Direction, +Player, +Piece, -NewBoard)
-% Places a piece in the board
+% Places a piece in the board, StartPos is received in respective player's coords
 place_piece(Board, StartPos, Direction, Player, Piece, NewBoard):-
     calculate_position(Player, StartPos, StartX, StartY),
     calculate_pos_to_pos(Player, StartPos, NewPos),
