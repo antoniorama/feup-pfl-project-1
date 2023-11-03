@@ -135,10 +135,20 @@ piece_default_square(piece3_2, l3_).
 piece_default_square(piece4_2, l4_).
 piece_default_square(piece6_2, l6_).
 
-% player_info(?Name, ?TurnNO)
+% player_turn(?Name, ?TurnNO)
 player_turn(dark_player, 0).
 player_turn(light_player, 1).
+player_turn(dark_player, 2).
+player_turn(light_player, 3).
+
+% turn_phase(?TurnNO, ?Phase)
+turn_phase(0, placement_phase).
+turn_phase(1, placement_phase).
+turn_phase(2, scoring_phase).
+turn_phase(3, scoring_phase).
 
 % swap_turn(?CurrentTurn, ?NextTurn)
 swap_turn(0, 1).
 swap_turn(1, 0).
+swap_turn(2, 3).
+swap_turn(3, 2).

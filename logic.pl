@@ -161,12 +161,12 @@ test_place_horizontal:-
 % ----------------------------------------
 
 % calculateScoreUponRemoval(+Player, +Piece, +NumberIntersectedPieces, +NumberScoreCounters, -ScoreUponRemoval)
-calculateScoreUponRemoval(Player, Piece, NumberIntersectedPieces, NumberScoreCounters, ScoreUponRemoval):-
+calculateScoreUponRemoval(Piece, NumberIntersectedPieces, NumberScoreCounters, ScoreUponRemoval):-
     piece_info(_, Value, _, _, Piece),
     NumberScoreCounters > 0,
     ScoreUponRemoval is NumberIntersectedPieces * Value * (NumberScoreCounters * 2).
 
-calculateScoreUponRemoval(Player, Piece, NumberIntersectedPieces, NumberScoreCounters, ScoreUponRemoval):-
+calculateScoreUponRemoval(Piece, NumberIntersectedPieces, NumberScoreCounters, ScoreUponRemoval):-
     piece_info(_, Value, _, _, Piece),
     NumberScoreCounters =:= 0,
     ScoreUponRemoval is NumberIntersectedPieces * Value.
@@ -233,7 +233,4 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [_|T], A
 %PlaceScoreCounter(+Player)
 
 % PlaceScoringPlayer(Player):-
-      calculate_position(Player, 00, StartX, StartY),
-    
-    
-
+%      calculate_position(Player, 00, StartX, StartY),
