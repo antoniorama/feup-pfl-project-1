@@ -152,10 +152,88 @@ test_place_horizontal:-
 
 
 %Scoring phase
+
+% Remove a piece from the board.
+%place function that puts nones here
+
+% ----------------------------------------
+% FEITO COM O COPILOT - pode n estar a dar
+% ----------------------------------------
+
+% calculateScoreUponRemoval(+Player, +Piece, +NumberIntersectedPieces, +NumberScoreCounters, -ScoreUponRemoval)
+calculateScoreUponRemoval(Player, Piece, NumberIntersectedPieces, NumberScoreCounters, ScoreUponRemoval):-
+    piece_info(_, Value, _, _, Piece),
+    NumberScoreCounters > 0,
+    ScoreUponRemoval is NumberIntersectedPieces * Value * (NumberScoreCounters * 2).
+
+calculateScoreUponRemoval(Player, Piece, NumberIntersectedPieces, NumberScoreCounters, ScoreUponRemoval):-
+    piece_info(_, Value, _, _, Piece),
+    NumberScoreCounters =:= 0,
+    ScoreUponRemoval is NumberIntersectedPieces * Value.
+
+% PlacedPieces = [Piece, PosWhite, Direction]
+% calculateNumberOfPiecesInRow(+Row, +Board, +PlacedPiecesLight, +PlacedPiecesDark, -NumPieces)
+calculateNumberOfPiecesInRow(Row, Board, PlacedPiecesLight, PlacedPiecesDark, NumPieces):-
+    calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, PlacedPiecesDark, 0, NumPieces).
+
+calculateNumberOfPiecesInRowHelper(_, _, [], [], NumPieces, NumPieces):- !.
+calculateNumberOfPiecesInRowHelper(Row, Board, [[Piece, Pos, Direction]|T], PlacedPiecesDark, Acc, NumPieces):-
+    calculate_position(light_player, Pos, X, Y),
+    X =:= Row,
+    calculateEndPos(Pos, Direction, Piece, EndPos),
+    calculate_position(light_player, EndPos, EndX, _),
+    EndX =:= Row,
+    Acc1 is Acc + 1,
+    calculateNumberOfPiecesInRowHelper(Row, Board, T, PlacedPiecesDark, Acc1, NumPieces).
+
+calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
+    calculate_position(dark_player, Pos, X, Y),
+    X =:= Row,
+    calculateEndPos(Pos, Direction, Piece, EndPos),
+    calculate_position(dark_player, EndPos, EndX, _),
+    EndX =:= Row,
+    Acc1 is Acc + 1,
+    calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, T, Acc1, NumPieces).
+
+calculateNumberOfPiecesInRowHelper(Row, Board, [_|T], PlacedPiecesDark, Acc, NumPieces):-
+    calculateNumberOfPiecesInRowHelper(Row, Board, T, PlacedPiecesDark, Acc, NumPieces).
+
+calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, [_|T], Acc, NumPieces):-
+    calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, T, Acc, NumPieces).
+
+% calculateNumberOfPiecesInColumn(+Column, +Board, +PlacedPiecesLight, +PlacedPiecesDark, -NumPieces)
+calculateNumberOfPiecesInColumn(Column, Board, PlacedPiecesLight, PlacedPiecesDark, NumPieces):-
+    calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, PlacedPiecesDark, 0, NumPieces).
+
+calculateNumberOfPiecesInColumnHelper(_, _, [], [], NumPieces, NumPieces):- !.
+calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T], PlacedPiecesDark, Acc, NumPieces):-
+    calculate_position(light_player, Pos, X, Y),
+    Y =:= Column,
+    calculateEndPos(Pos, Direction, Piece, EndPos),
+    calculate_position(light_player, EndPos, _, EndY),
+    EndY =:= Column,
+    Acc1 is Acc + 1,
+    calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
+
+calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
+    calculate_position(dark_player, Pos, X, Y),
+    Y =:= Column,
+    calculateEndPos(Pos, Direction, Piece, EndPos),
+    calculate_position(dark_player, EndPos, _, EndY),
+    EndY =:= Column,
+    Acc1 is Acc + 1,
+    calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
+
+calculateNumberOfPiecesInColumnHelper(Column, Board, [_|T], PlacedPiecesDark, Acc, NumPieces):-
+    calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc, NumPieces).
+    
+calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [_|T], Acc, NumPieces):-
+    calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc, NumPieces).
+
 %PlaceScoreCounter(+Player)
 
 % PlaceScoringPlayer(Player):-
-%     calculate_position(Player, 00, StartX, StartY),
+      calculate_position(Player, 00, StartX, StartY),
     
     
 
