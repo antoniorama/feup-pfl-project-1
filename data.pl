@@ -18,16 +18,16 @@ board(10, [
 ]).
 
 test_board(10, [
-	[none, none, none, none, none, none, none, none, none, none],
-	[none, none, none, none, none, none, none, none, none, none],
-	[none, none, none, none, none, none, none, none, none, none],
-	[none, none, none, none, none, none, none, none, none, none],
-	[none, none, none, none, none, none, none, none, none, none],
-	[none, none, none, none, none, none, none, none, none, none],
-	[none, none, none, none, none, none, none, none, none, none],
-	[none, none, none, none, none, none, none, none, none, none],
-	[none, none, none, none, none, none, none, none, none, none],
-	[d6_, d6_, d6_, d6_, d6_, d6_, d6_, none, none, none]
+	[d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_],
+	[d6_, none, d6_, none, none, none, none, none, d6_, d6_],
+	[d6_, none, d6_, d6_, d6_, none, d6_, d6_, d6_, d6_],
+	[d6_, d6_, d6_, d6_, d6_, none, d6_, d6_, none, d6_],
+	[d6_, none, d6_, d6_, none, d6_, d6_, none, d6_, d6_],
+	[d6_, d6_, none, d6_, d6_, d6_, none, d6_, none, d6_],
+	[d6_, none, d6_, d6_, d6_, none, d6_, none, none, d6_],
+	[d6_, d6_, d6_, d6_, none, d6_, d6_, none, d6_, d6_],
+	[d6_, d6_, d6_, none, d6_, none, none, d6_, none, d6_],
+	[d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_]
 ]).
 
 % square_info(?Player, ?Value, ?ScoreCounter, ?Square)

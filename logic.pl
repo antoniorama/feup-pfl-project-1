@@ -16,19 +16,38 @@ test_fun:-
 calculateEndPos(StartPos, horizontal, Piece, EndPos):-
     piece_info(Length, _, _, _, Piece),
     EndPos is StartPos + Length - 1.
+    % EndPos // 10 =:= StartPos // 10,
+    % EndPos =< 99,
+    % EndPos >= 0.
 
 calculateEndPos(StartPos, vertical, Piece, EndPos):-
     piece_info(Length, _, _, _, Piece),
     EndPos is StartPos - ( (Length - 1) * 10).
-    
+    % EndPos mod 10 =:= StartPos mod 10,
+    % EndPos =< 99,
+    % EndPos >= 0.
+
+% isOutOfBounds(+StartPos, +EndPos, +Direction)
+isOutOfBounds(StartPos, EndPos, horizontal):-
+    EndPos // 10 =:= StartPos // 10,
+    EndPos =< 99,
+    EndPos >= 0.
+
+isOutOfBounds(StartPos, EndPos, vertical):-
+    EndPos mod 10 =:= StartPos mod 10,
+    EndPos =< 99,
+    EndPos >= 0.
+
 % Checks if there is already a piece in those positions. use length. if start coordinates and end coordinates are diagonal it doesn't allow either
 % canBePlayed(+Board, +StartPos, +View, +Direction, +Piece)
 canBePlayed(Board, StartPos, Direction, Piece) :-
+    % \+is_none(Board, StartPos),
     calculateEndPos(StartPos, Direction, Piece, EndPos),
+    isOutOfBounds(StartPos, EndPos, Direction),
     canBePlayedHelper(Board, StartPos, EndPos, Direction).
 
 %for horizontal pieces
-canBePlayedHelper(_, StartPos, EndPos, _) :-
+canBePlayedHelper(_, StartPos, EndPos, horizontal) :-
     StartPos > EndPos, !.
 canBePlayedHelper(Board, StartPos, EndPos, _) :-
     StartPos =:= EndPos,
@@ -40,15 +59,18 @@ canBePlayedHelper(Board, StartPos, EndPos, horizontal) :-
     canBePlayedHelper(Board, NextPos, EndPos, horizontal).
 
 %for vertical pieces
+canBePlayedHelper(_, StartPos, EndPos, vertical) :-
+    StartPos < EndPos, !.
 canBePlayedHelper(Board, StartPos, EndPos, vertical) :-
-    StartPos < EndPos,
+    StartPos > EndPos,
     is_none(Board, StartPos),
-    NextPos is StartPos + 10,
+    NextPos is StartPos - 10,
     canBePlayedHelper(Board, NextPos, EndPos, vertical).
 
 test_funfun:-
-    test_board(_, Board),
-    canBePlayed(Board, 99, vertical, piece6_2).
+    board(_, Board),
+    % trace,
+    canBePlayed(Board, 65, vertical, piece2_1).
 
 % firstElement(+PieceList, -Piece)
 firstElement([Head|_], Head).
@@ -77,6 +99,7 @@ can_place_piece_test :-
     test_board(_, Board),
     % trace,
     % display_board(Board, 9, 10).
+    % trace,
     canPlaceAPiece(Board, [piece2_1, piece2_1, piece2_1, piece2_1, piece3_1, piece3_1, piece3_1, piece4_1, piece4_1, piece6_1]).
 
 % place_piece(+Board, +StartPos, +Direction, +Player, +Piece, -NewBoard)
