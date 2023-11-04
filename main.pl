@@ -102,8 +102,7 @@ choose_move(State, Move) :-
 % Gets the move by user input (for scoring phase)
 choose_move(State, Move) :-
 	retrieve_turn_from_state(State, TurnNO),
-	TurnNO >= 2,
-	TurnNO =< 3,
+	turn_phase(TurnNO, scoring_phase),
 	write('Placed pieces: \n\n'),
 	show_player_pieces(State),
 	write('Piece to remove: '),
@@ -114,7 +113,16 @@ choose_move(State, Move) :-
 	write('Direction of that piece (horizontal or vertical): '),
 	read(UserInputDirection),
 	clear_buffer,
+	validate_move(State, Move),
 	append([UserInputPiece, UserInputSquare, UserInputDirection], [], Move).
+
+% validate_moves(+State, +Move)
+% validates a move
+validate_move([2 ,[_, PlacedPiecesDark, _, _], [_, _, _, _], Board], Move) :-
+	member(Move, PlacedPiecesDark).
+
+validate_move([3 ,[_, _, _, _], [_, PlacedPiecesLight, _, _], Board], Move) :-
+	member(Move, PlacedPiecesLight).
 
 % Clause for when canPlaceAPiece succeeds for light_player
 get_new_state([0, [PlacementPhasePiecesDark, PlacedPiecesDark, _, _], [PlacementPhasePiecesLight, PlacedPiecesLight, _, _], _], PlayedPiece, Square, Direction, NewBoard, [1, [NewList, NewPlayedPiecesList, 0, 0], [PlacementPhasePiecesLight, PlacedPiecesLight, 0, 0], NewBoard]) :-
@@ -140,12 +148,25 @@ get_new_state([1, [PlacementPhasePiecesDark, PlacedPiecesDark, _, _], [Placement
 	append([[PlayedPiece, Square, Direction]], PlacedPiecesLight, NewPlayedPiecesList),
 	\+ canPlaceAPiece(NewBoard, PlacementPhasePiecesDark).
 
+get_new_state([2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], LightPlayerInfo, Board], PlayedPiece, Square, Direction, NewBoard, [3, [PlacementPhasePiecesDark, NewList, ScoreDark, PieceRemovedLenghtDark], LightPlayerInfo, Board]) :-
+	delete_element_from_list(PlayedPiece, PlacedPiecesDark, NewList).
+
+get_new_state([3, DarkPlayerInfo, [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], PlayedPiece, Square, Direction, NewBoard, [3, DarkPlayerInfo, [PlacementPhasePiecesLight, NewList, ScoreLight, PieceRemovedLengthLight], Board]) :-
+	delete_element_from_list(PlayedPiece, PlacedPiecesLight, NewList).
+
 % move(+State, +Move, -NewState)
 % Update the game state based on the move
-move([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, _, _], [PlacementPhasePiecesLight, PlacedPiecesLight, _, _], Board], [Piece, Square, Direction], NewState) :-
+move([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, _, _], LightPlayerInfo, Board], [Piece, Square, Direction], NewState) :-
+	turn_phase(TurnNO, placement_phase),
 	player_turn(PlayerName, TurnNO),
 	place_piece(Board, Square, Direction, PlayerName, Piece, NewBoard),
-	get_new_state([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, _, _], [PlacementPhasePiecesLight, PlacedPiecesLight, _, _], _], Piece, Square, Direction, NewBoard, NewState).
+	get_new_state([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, _, _], LightPlayerInfo, _], Piece, Square, Direction, NewBoard, NewState).
+
+move([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], [Piece, Square, Direction], NewState) :-
+	turn_phase(TurnNO, scoring_phase),
+	player_turn(PlayerName, TurnNO),
+	remove_piece(Board, Piece, Square, PlayerName, Direction, NewBoard),
+	get_new_state([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], Piece, Square, Direction, NewBoard, NewState).
 
 display_game([TurnNO,_,_,Board]) :-
 	clear_console,
@@ -170,5 +191,5 @@ retrieve_turn_from_state([TurnNO|_], TurnNO).
 
 % build_scoring_phase_state(+CurrentState, -NewState)
 % build the new state after placement phase ends
-build_scoring_phase_state([0, Player1Info, Player2Info, Board], [3, Player1Info, Player2Info, Board]).
-build_scoring_phase_state([1, Player1Info, Player2Info, Board], [2, Player1Info, Player2Info, Board]).
+build_scoring_phase_state([0, Player1Info, LightPlayerInfo, Board], [3, Player1Info, LightPlayerInfo, Board]).
+build_scoring_phase_state([1, Player1Info, LightPlayerInfo, Board], [2, Player1Info, LightPlayerInfo, Board]).

@@ -109,12 +109,32 @@ place_piece(Board, StartPos, Direction, Player, Piece, NewBoard):-
     format("Square Display: ~w  NSquares: ~d  StartX: ~d  StartY: ~d \n" ,[DefaultSquare, NSquares, StartX, StartY]),
     place_direction(Board, DefaultSquare, StartX, StartY, NSquares, NewBoard, Direction).
 
+% remove_piece(+Board, +Piece, +PosWhite, +Player, +Direction, -NewBoard)
+% Removes a piece from the board
+remove_piece(Board, Piece, PosWhite, Player, Direction, NewBoard) :-
+    piece_info(Length, _, _ , _, Piece),
+    place_nones(Board, PosWhite, Length, Player, Direction, NewBoard).
+
+% place_nones(+Board, +StartPos, +Length, +Player, +Direction, -NewBoard)
+% Places nones in the board, StartPos is received in respective player's coords
+place_nones(Board, StartPos, Length, Player, Direction, NewBoard):-
+    calculate_position(Player, StartPos, StartX, StartY),
+    place_direction(Board, none, StartX, StartY, Length, NewBoard, Direction).
+
 test_place_piece:-
     board(_, Board),
     place_piece(Board, 85, vertical, light_player, piece1_2, NewBoard),
     display_header_coords(10, 10),
     display_board(NewBoard, 9, 10),
     display_footer_coords(10, 10).
+
+test_place_nones:-
+    test_board(_, Board),
+    place_nones(Board, 40, 8, light_player, horizontal, NewBoard),
+    display_header_coords(10, 10),
+    display_board(NewBoard, 9, 10),
+    display_footer_coords(10, 10).
+
 
 place_direction(Matrix, Value, X, Y, Length, NewMatrix, horizontal):-
     place_horizontal(Matrix, Value, X, Y, Length, NewMatrix).
@@ -126,6 +146,7 @@ place_direction(Matrix, Value, X, Y, Length, NewMatrix, vertical):-
 % places a piece (group of squares) horinzontally in the board
 place_horizontal(Matrix, _, _, _, 0, Matrix):- !.
 place_horizontal(Matrix, Value, X, Y, Length, NewMatrix):-
+    format('Length : ~w\n', [Length]),
     place_in_matrix(Matrix, X, Y, Value, TempMatrix),
     NewY is Y + 1,
     NewLength is Length - 1,
@@ -142,9 +163,13 @@ place_vertical(Matrix, Value, X, Y, Length, NewMatrix):-
 
 test_place_horizontal:-
     board(_, Board),
-    place_horizontal(Board, 'd2_', 4, 5, 5, NewMatrix),
+    place_horizontal(Board, 'd1_', 4, 5, 5, NewMatrix),
+    write('a'),
+    place_horizontal(NewMatrix, none, 4, 5, 5, Pngbaby),
+    write('b'),
+    print_list(NewMatrix),
     display_header_coords(10, 10),
-    display_board(NewMatrix, 9, 10),
+    display_board(Pngbaby, 9, 10),
     display_footer_coords(10, 10).
 
 
