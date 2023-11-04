@@ -172,10 +172,9 @@ calculateScoreUponRemoval(Piece, NumPieces, NumScoreCounters, Score):-
     piece_info(_, Value, _, _, Piece),
     Score is NumPieces * Value * (NumScoreCounters * 2).
 
-calculateScoreUponRemoval(Piece, NumPieces, NumScoreCounters, Score):-
+calculateScoreUponRemoval(Piece, NumPieces, NumScoreCounters, NumPieces * Value):-
     NumScoreCounters =:= 0,
-    piece_info(_, Value, _, _, Piece),
-    Score is NumPieces * Value.
+    piece_info(_, Value, _, _, Piece).
 
 % get_number_pieces(+Direciton, +PosWhite, +Board, +PlacedPiecesDark, +PlacedPiecesLight, -NumberPieces)
 get_number_pieces(horizontal, PosWhite , Board, PlacedPiecesDark, PlacedPiecesLight, NumberPieces) :-
