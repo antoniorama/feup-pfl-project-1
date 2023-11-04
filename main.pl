@@ -11,7 +11,7 @@ play :-
 % initial_state(-State)
 % initialize the state with turn to dark_player (0) and placement phase pieces
 initial_state([0, [PlacementPhasePiecesDark, [], 0, 0], [PlacementPhasePiecesLight, [], 0, 0], Board]) :-
-	test_board(_, Board),
+	test_board2(_, Board),
 	initial_dark_pieces(InitialDarkPieces),
 	append(InitialDarkPieces, [], PlacementPhasePiecesDark),
 	initial_light_pieces(InitialLightPieces),

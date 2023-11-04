@@ -30,6 +30,19 @@ test_board(10, [
 	[d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_, d6_]
 ]).
 
+test_board2(10, [
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, d1_, none, none, none, none, none, none, none, l1_],
+	[none, d1_, d1_, d1_, d1_, l2_, l2_, l2_, l2_, l1_],
+	[none, d1_, none, none, none, none, none, none, none, l1_],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none]
+]).
+
 % square_info(?Player, ?Value, ?ScoreCounter, ?Square)
 % Information about a square that is part of a piece
 square_info(dark_player, 1, none , d1_).

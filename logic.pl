@@ -16,16 +16,10 @@ test_fun:-
 calculateEndPos(StartPos, horizontal, Piece, EndPos):-
     piece_info(Length, _, _, _, Piece),
     EndPos is StartPos + Length - 1.
-    % EndPos // 10 =:= StartPos // 10,
-    % EndPos =< 99,
-    % EndPos >= 0.
 
 calculateEndPos(StartPos, vertical, Piece, EndPos):-
     piece_info(Length, _, _, _, Piece),
     EndPos is StartPos - ( (Length - 1) * 10).
-    % EndPos mod 10 =:= StartPos mod 10,
-    % EndPos =< 99,
-    % EndPos >= 0.
 
 % isOutOfBounds(+StartPos, +EndPos, +Direction)
 isOutOfBounds(StartPos, EndPos, horizontal):-
@@ -109,6 +103,12 @@ place_piece(Board, StartPos, Direction, Player, Piece, NewBoard):-
     format("Square Display: ~w  NSquares: ~d  StartX: ~d  StartY: ~d \n" ,[DefaultSquare, NSquares, StartX, StartY]),
     place_direction(Board, DefaultSquare, StartX, StartY, NSquares, NewBoard, Direction).
 
+% place_nones(+Board, +StartPos, +Length, +Player, +Direction, -NewBoard)
+% Places nones in the board, StartPos is received in respective player's coords
+place_nones(Board, StartPos, Length, Player, Direction, NewBoard):-
+    calculate_position(Player, StartPos, StartX, StartY),
+    place_direction(Board, none, StartX, StartY, Length, NewBoard, Direction).
+    
 test_place_piece:-
     board(_, Board),
     place_piece(Board, 85, vertical, light_player, piece1_2, NewBoard),
@@ -147,10 +147,6 @@ test_place_horizontal:-
     display_board(NewMatrix, 9, 10),
     display_footer_coords(10, 10).
 
-
-
-
-
 %Scoring phase
 
 % Remove a piece from the board.
@@ -178,7 +174,7 @@ calculateNumberOfPiecesInRow(Row, Board, PlacedPiecesLight, PlacedPiecesDark, Nu
 
 calculateNumberOfPiecesInRowHelper(_, _, [], [], NumPieces, NumPieces):- !.
 calculateNumberOfPiecesInRowHelper(Row, Board, [[Piece, Pos, Direction]|T], PlacedPiecesDark, Acc, NumPieces):-
-    calculate_position(light_player, Pos, X, Y),
+    calculate_position(light_player, Pos, X, _),
     X =:= Row,
     calculateEndPos(Pos, Direction, Piece, EndPos),
     calculate_position(light_player, EndPos, EndX, _),
@@ -186,14 +182,30 @@ calculateNumberOfPiecesInRowHelper(Row, Board, [[Piece, Pos, Direction]|T], Plac
     Acc1 is Acc + 1,
     calculateNumberOfPiecesInRowHelper(Row, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
+calculateNumberOfPiecesInRowHelper(Row, Board, [[Piece, Pos, Direction]|T], PlacedPiecesDark, Acc, NumPieces):-
+    calculate_position(light_player, Pos, _, Y),
+    calculateEndPos(Pos, Direction, Piece, EndPos),
+    calculate_position(light_player, EndPos, _, EndY),
+    Y =< Row, EndY >= Row,
+    Acc1 is Acc + 1,
+    calculateNumberOfPiecesInRowHelper(Row, Board, T, PlacedPiecesDark, Acc1, NumPieces).
+
 calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
-    calculate_position(dark_player, Pos, X, Y),
+    calculate_position(dark_player, Pos, X, _),
     X =:= Row,
     calculateEndPos(Pos, Direction, Piece, EndPos),
     calculate_position(dark_player, EndPos, EndX, _),
     EndX =:= Row,
     Acc1 is Acc + 1,
     calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, T, Acc1, NumPieces).
+
+calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
+    calculate_position(dark_player, Pos, _, Y),
+    calculateEndPos(Pos, Direction, Piece, EndPos),
+    calculate_position(dark_player, EndPos, _, EndY),
+    Y =< Row, EndY >= Row,
+    Acc1 is Acc + 1,
+    calculateNumberOfPiecesInRowHelper(Row, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInRowHelper(Row, Board, [_|T], PlacedPiecesDark, Acc, NumPieces):-
     calculateNumberOfPiecesInRowHelper(Row, Board, T, PlacedPiecesDark, Acc, NumPieces).
@@ -234,3 +246,8 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [_|T], A
 
 % PlaceScoringPlayer(Player):-
 %      calculate_position(Player, 00, StartX, StartY),
+
+test_row :-
+    test_board2(_, Board),
+    calculateNumberOfPiecesInRow(3, Board, [[piece2_2, 35, horizontal], [piece1_2, 49, vertical]], [[piece1_1, 41, vertical], [piece1_1, 32, horizontal]], NumPieces),
+    format('~w\n', [NumPieces]).
