@@ -325,16 +325,7 @@ iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter, FinalScoreCounter):-
 iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter, FinalScoreCounter):-
     Pos is Row * 10 + Col,
     element_at(Board, Pos, Element),
-    square_info(_, _, sc_dark, Element),
-    format('~w ', [Element]),
-    NewCol is Col + 1,
-    NewScoreCounter is ScoreCounter + 1,
-    iterateSquaresInRowHelper(Row, Board, NewCol, NewScoreCounter, FinalScoreCounter).
-
-iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter, FinalScoreCounter):-
-    Pos is Row * 10 + Col,
-    element_at(Board, Pos, Element),
-    square_info(_, _, sc_light, Element),
+    \+ square_info(_, _, none, Element),
     format('~w ', [Element]),
     NewCol is Col + 1,
     NewScoreCounter is ScoreCounter + 1,

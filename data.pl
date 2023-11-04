@@ -44,7 +44,7 @@ test_board2(10, [
 ]).
 
 test_board3(10, [
-	[d3S, d3_, d3_, d3_, d3_, d2s, d2_, d2_, d2_, none],
+	[d3S, d3_, d3_, d3_, sdark, d2s, none, d2_, d2_, slight],
 	[l1_, d2_, l6_, l6_, l6_, l6_, l6_, l6_, l6_, l1_],
 	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],
 	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],
@@ -94,6 +94,9 @@ square_info(light_player, 3, sc_light, l3s).
 square_info(light_player, 4, sc_light, l4s).
 square_info(light_player, 6, sc_light, l6s).
 
+square_info(light_player, _, sc_light, slight).
+square_info(dark_player, _, sc_dark, sdark).
+
 square_info(_, _, _, none).
 
 % square_to_display(+Square, -Display)
@@ -132,6 +135,9 @@ square_to_display(l2s, 's B2').
 square_to_display(l3s, 's B3').
 square_to_display(l4s, 's B4').
 square_to_display(l6s, 's B6').
+
+square_to_display(slight, ' s  ').
+square_to_display(sdark, ' S  ').
 
 % piece_info(?N_Squares, ?Value, ?StartAmmount, ?Player, +PieceName)
 % Information of a piece that contains multiple squares
