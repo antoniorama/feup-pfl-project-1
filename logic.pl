@@ -202,29 +202,29 @@ calculateNumberOfPiecesInRowHelper(Row, Board, [[Piece, Pos, Direction]|T], Plac
     calculateNumberOfPiecesInRowHelper(Row, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInRowHelper(Row, Board, [[Piece, Pos, Direction]|T], PlacedPiecesDark, Acc, NumPieces):-
-    calculate_position(light_player, Pos, _, Y),
+    calculate_position(light_player, Pos, X, _),
     calculateEndPos(Pos, Direction, Piece, EndPos),
-    calculate_position(light_player, EndPos, _, EndY),
-    Y =< Row, EndY >= Row,
+    calculate_position(light_player, EndPos, EndX, _),
+    EndX =< Row, X >= Row,
     Acc1 is Acc + 1,
     calculateNumberOfPiecesInRowHelper(Row, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
-    calculate_position(dark_player, Pos, X, _),
+    calculate_position(light_player, Pos, X, _),
     X =:= Row,
     calculateEndPos(Pos, Direction, Piece, EndPos),
-    calculate_position(dark_player, EndPos, EndX, _),
+    calculate_position(light_player, EndPos, EndX, _),
     EndX =:= Row,
     Acc1 is Acc + 1,
     calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, T, Acc1, NumPieces).
 
 calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
-    calculate_position(dark_player, Pos, _, Y),
+    calculate_position(light_player, Pos, X, _),
     calculateEndPos(Pos, Direction, Piece, EndPos),
-    calculate_position(dark_player, EndPos, _, EndY),
-    Y =< Row, EndY >= Row,
+    calculate_position(light_player, EndPos, EndX, _),
+    EndX =< Row, X >= Row,
     Acc1 is Acc + 1,
-    calculateNumberOfPiecesInRowHelper(Row, Board, T, PlacedPiecesDark, Acc1, NumPieces).
+    calculateNumberOfPiecesInRowHelper(Row, Board, PlacedPiecesLight, T, Acc1, NumPieces).
 
 calculateNumberOfPiecesInRowHelper(Row, Board, [_|T], PlacedPiecesDark, Acc, NumPieces):-
     calculateNumberOfPiecesInRowHelper(Row, Board, T, PlacedPiecesDark, Acc, NumPieces).
@@ -247,10 +247,10 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T]
     calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
-    calculate_position(dark_player, Pos, X, Y),
+    calculate_position(light_player, Pos, X, Y),
     Y =:= Column,
     calculateEndPos(Pos, Direction, Piece, EndPos),
-    calculate_position(dark_player, EndPos, _, EndY),
+    calculate_position(light_player, EndPos, _, EndY),
     EndY =:= Column,
     Acc1 is Acc + 1,
     calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
