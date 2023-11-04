@@ -43,13 +43,26 @@ test_board2(10, [
 	[d2_, d2_, d2_, d2_, l3_, l3_, l2_, l2_, l2_, l2_]
 ]).
 
+test_board3(10, [
+	[d3S, d3_, d3_, d3_, sdark, d2s, none, d2_, d2_, slight],
+	[l1_, d2_, l6_, l6_, l6_, l6_, l6_, l6_, l6_, l1_],
+	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],
+	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],
+	[l1_, none, d1_, l1_, l1_, l1_, d2_, d2_, d2_, d2_],
+	[l1_, none, none, none, l3_, l3_, l2_, l2_, l2_, l2_],
+	[l1_, d1_, d1_, d1_, l3_, l3_, d2_, d2_, d2_, d2_],
+	[d1_, d1_, d1_, none, l3_, l3_, l2_, l2_, l2_, l2_],
+	[l2_, l2_, l2_, l2_, l3_, l3_, d1_, d1_, d1_, none],
+	[d2_, d2_, d2_, d2_, l3_, l3_, l2_, l2_, l2_, l2_]
+]).
+
 % square_info(?Player, ?Value, ?ScoreCounter, ?Square)
 % Information about a square that is part of a piece
-square_info(dark_player, 1, none , d1_).
+square_info(dark_player, 1, none, d1_).
 square_info(dark_player, 2, none, d2_).
 square_info(dark_player, 3, none, d3_).
 square_info(dark_player, 4, none, d4_).
-square_info(dark_player, 6, none, d5_).
+square_info(dark_player, 6, none, d6_).
 
 square_info(dark_player, 1, sc_dark, d1S).
 square_info(dark_player, 2, sc_dark, d2S).
@@ -80,6 +93,11 @@ square_info(light_player, 2, sc_light, l2s).
 square_info(light_player, 3, sc_light, l3s).
 square_info(light_player, 4, sc_light, l4s).
 square_info(light_player, 6, sc_light, l6s).
+
+square_info(light_player, _, sc_light, slight).
+square_info(dark_player, _, sc_dark, sdark).
+
+square_info(_, _, _, none).
 
 % square_to_display(+Square, -Display)
 square_to_display(d1_, ' P1 ').
@@ -117,6 +135,9 @@ square_to_display(l2s, 's B2').
 square_to_display(l3s, 's B3').
 square_to_display(l4s, 's B4').
 square_to_display(l6s, 's B6').
+
+square_to_display(slight, ' s  ').
+square_to_display(sdark, ' S  ').
 
 % piece_info(?N_Squares, ?Value, ?StartAmmount, ?Player, +PieceName)
 % Information of a piece that contains multiple squares

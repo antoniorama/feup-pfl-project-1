@@ -187,7 +187,7 @@ calculateScoreUponRemoval(Piece, NumPieces, NumScoreCounters, Score):-
 
 % get_number_pieces(+Direciton, +PosWhite, +Board, +PlacedPiecesDark, +PlacedPiecesLight, -NumberPieces)
 get_number_pieces(horizontal, PosWhite , Board, PlacedPiecesDark, PlacedPiecesLight, NumberPieces) :-
-    apply_to_second_elements(PlacedPiecesDark, ListConverted),
+apply_to_second_elements(PlacedPiecesDark, ListConverted),
     calculate_position_new(light_player, PosWhite, _, Y),
     calculateNumberOfPiecesInRow(Y, Board, PlacedPiecesLight, ListConverted, NumberPieces).
 
@@ -254,7 +254,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T]
     calculate_position(light_player, EndPos, _, EndY),
     EndY =:= Column,
     Acc1 is Acc + 1,
-    format('dPIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
+format('dPIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T], PlacedPiecesDark, Acc, NumPieces):-
@@ -264,7 +264,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T]
     calculate_position(light_player, EndPos, _, EndY),
     EndY >= Column,
     Acc1 is Acc + 1,
-    format('c PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
+format('c PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
@@ -274,7 +274,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece,
     calculate_position(light_player, EndPos, _, EndY),
     EndY =:= Column,
     Acc1 is Acc + 1,
-    format('a PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
+format('a PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
@@ -284,7 +284,6 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece,
     calculate_position(light_player, EndPos, _, EndY),
     EndY >= Column,
     Acc1 is Acc + 1,
-    format('b PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, [_|T], PlacedPiecesDark, Acc, NumPieces):-
@@ -306,5 +305,36 @@ test_row :-
 test_column :-
     test_board2(_, Board),
     calculateNumberOfPiecesInColumn(5, Board, [[piece2_2, 35, horizontal], [piece1_2, 65, vertical]], [[piece1_1, 25, vertical], [piece1_1, 95, horizontal]], NumPieces),
-    format('~w\n', [NumPieces]).
+        format('~w\n', [NumPieces]).
+
+%iterates over each square in row
+%iterateSquaresInRow(+Row, +Board, -FinalScoreCounter)
+countScoreCountersInRow(Row, Board, FinalScoreCounter):-
+    countScoreCountersInRowHelper(Row, Board, 0, 0, FinalScoreCounter).
+
+countScoreCountersInRowHelper(_, _, 10, ScoreCounter, ScoreCounter):- !.
+
+countScoreCountersInRowHelper(Row, Board, Col, ScoreCounter, FinalScoreCounter):-
+    Pos is Row * 10 + Col,
+    element_at(Board, Pos, Element),
+    square_info(_, _, none, Element),
+    format('~w ', [Element]),
+    NewCol is Col + 1,
+    countScoreCountersInRowHelper(Row, Board, NewCol, ScoreCounter, FinalScoreCounter).
+
+countScoreCountersInRowHelper(Row, Board, Col, ScoreCounter, FinalScoreCounter):-
+    Pos is Row * 10 + Col,
+    element_at(Board, Pos, Element),
+    \+ square_info(_, _, none, Element),
+    format('~w ', [Element]),
+    NewCol is Col + 1,
+    NewScoreCounter is ScoreCounter + 1,
+    countScoreCountersInRowHelper(Row, Board, NewCol, NewScoreCounter, FinalScoreCounter).
+
+test_countScoreCountersInRow:-
+     test_board3(_, Board),
+     countScoreCountersInRow(0, Board, FinalScoreCounter),
+     format('Final Score Counter: ~w', [FinalScoreCounter]).
+
+
  
