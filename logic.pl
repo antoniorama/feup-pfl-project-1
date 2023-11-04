@@ -312,19 +312,40 @@ test_column :-
 iterateSquaresInRow(Row, Board, ScoreCounter):-
     iterateSquaresInRowHelper(Row, Board, 0, ScoreCounter).
 
-iterateSquaresInRowHelper(_, _, 10, _):- !.
+iterateSquaresInRowHelper(_, _, 10, ScoreCounter):- !.
 
 iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter):-
     Pos is Row * 10 + Col,
     element_at(Board, Pos, Element),
+    square_info(_, _, none, Element),
     format('~w ', [Element]),
-    square_info(_, _, ScoreCounter, Element),
     NewCol is Col + 1,
-    iterateSquaresInRowHelper(Row, Board, NewCol, _).
+    format('~w ', [ScoreCounter]),
+    iterateSquaresInRowHelper(Row, Board, NewCol, ScoreCounter).
 
+
+iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter):-
+    Pos is Row * 10 + Col,
+    element_at(Board, Pos, Element),
+    square_info(_, _, sc_dark, Element),
+    NewCol is Col + 1,
+    format('~w ', [Element]),
+    NewScoreCounter is ScoreCounter + 1,
+    format('~w ', [NewScoreCounter]),
+    iterateSquaresInRowHelper(Row, Board, NewCol, NewScoreCounter).
+
+iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter):-
+    Pos is Row * 10 + Col,
+    element_at(Board, Pos, Element),
+    square_info(_, _, sc_light, Element),
+    NewCol is Col + 1,
+    format('~w ', [Element]),
+    NewScoreCounter is ScoreCounter + 1,
+    format('~w ', [NewScoreCounter]),
+    iterateSquaresInRowHelper(Row, Board, NewCol, NewScoreCounter).
 
 test_iterateSquaresInRow:-
-     test_board(_, Board),
-     iterateSquaresInRow(1, Board, ScoreCounter).
+     test_board3(_, Board),
+     iterateSquaresInRow(0, Board, 0).
 
  

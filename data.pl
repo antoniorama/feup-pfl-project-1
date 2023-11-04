@@ -43,9 +43,22 @@ test_board2(10, [
 	[d2_, d2_, d2_, d2_, l3_, l3_, l2_, l2_, l2_, l2_]
 ]).
 
+test_board3(10, [
+	[d3S, d3_, d3_, d3_, d3_, d2s, d2_, d2_, d2_, none],
+	[l1_, d2_, l6_, l6_, l6_, l6_, l6_, l6_, l6_, l1_],
+	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],
+	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],
+	[l1_, none, d1_, l1_, l1_, l1_, d2_, d2_, d2_, d2_],
+	[l1_, none, none, none, l3_, l3_, l2_, l2_, l2_, l2_],
+	[l1_, d1_, d1_, d1_, l3_, l3_, d2_, d2_, d2_, d2_],
+	[d1_, d1_, d1_, none, l3_, l3_, l2_, l2_, l2_, l2_],
+	[l2_, l2_, l2_, l2_, l3_, l3_, d1_, d1_, d1_, none],
+	[d2_, d2_, d2_, d2_, l3_, l3_, l2_, l2_, l2_, l2_]
+]).
+
 % square_info(?Player, ?Value, ?ScoreCounter, ?Square)
 % Information about a square that is part of a piece
-square_info(dark_player, 1, none , d1_).
+square_info(dark_player, 1, none, d1_).
 square_info(dark_player, 2, none, d2_).
 square_info(dark_player, 3, none, d3_).
 square_info(dark_player, 4, none, d4_).
