@@ -49,7 +49,7 @@ square_info(dark_player, 1, none , d1_).
 square_info(dark_player, 2, none, d2_).
 square_info(dark_player, 3, none, d3_).
 square_info(dark_player, 4, none, d4_).
-square_info(dark_player, 6, none, d5_).
+square_info(dark_player, 6, none, d6_).
 
 square_info(dark_player, 1, sc_dark, d1S).
 square_info(dark_player, 2, sc_dark, d2S).
@@ -80,6 +80,8 @@ square_info(light_player, 2, sc_light, l2s).
 square_info(light_player, 3, sc_light, l3s).
 square_info(light_player, 4, sc_light, l4s).
 square_info(light_player, 6, sc_light, l6s).
+
+square_info(_, _, _, none).
 
 % square_to_display(+Square, -Display)
 square_to_display(d1_, ' P1 ').
