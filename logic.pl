@@ -308,44 +308,42 @@ test_column :-
         format('~w\n', [NumPieces]).
 
 %iterates over each square in row
-%iterateSquaresInRow(+Row, +Board)
-iterateSquaresInRow(Row, Board, ScoreCounter):-
-    iterateSquaresInRowHelper(Row, Board, 0, ScoreCounter).
+%iterateSquaresInRow(+Row, +Board, -FinalScoreCounter)
+iterateSquaresInRow(Row, Board, FinalScoreCounter):-
+    iterateSquaresInRowHelper(Row, Board, 0, 0, FinalScoreCounter).
 
-iterateSquaresInRowHelper(_, _, 10, ScoreCounter):- !.
+iterateSquaresInRowHelper(_, _, 10, ScoreCounter, ScoreCounter):- !.
 
-iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter):-
+iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter, FinalScoreCounter):-
     Pos is Row * 10 + Col,
     element_at(Board, Pos, Element),
     square_info(_, _, none, Element),
     format('~w ', [Element]),
     NewCol is Col + 1,
-    format('~w ', [ScoreCounter]),
-    iterateSquaresInRowHelper(Row, Board, NewCol, ScoreCounter).
+    iterateSquaresInRowHelper(Row, Board, NewCol, ScoreCounter, FinalScoreCounter).
 
-
-iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter):-
+iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter, FinalScoreCounter):-
     Pos is Row * 10 + Col,
     element_at(Board, Pos, Element),
     square_info(_, _, sc_dark, Element),
-    NewCol is Col + 1,
     format('~w ', [Element]),
+    NewCol is Col + 1,
     NewScoreCounter is ScoreCounter + 1,
-    format('~w ', [NewScoreCounter]),
-    iterateSquaresInRowHelper(Row, Board, NewCol, NewScoreCounter).
+    iterateSquaresInRowHelper(Row, Board, NewCol, NewScoreCounter, FinalScoreCounter).
 
-iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter):-
+iterateSquaresInRowHelper(Row, Board, Col, ScoreCounter, FinalScoreCounter):-
     Pos is Row * 10 + Col,
     element_at(Board, Pos, Element),
     square_info(_, _, sc_light, Element),
-    NewCol is Col + 1,
     format('~w ', [Element]),
+    NewCol is Col + 1,
     NewScoreCounter is ScoreCounter + 1,
-    format('~w ', [NewScoreCounter]),
-    iterateSquaresInRowHelper(Row, Board, NewCol, NewScoreCounter).
+    iterateSquaresInRowHelper(Row, Board, NewCol, NewScoreCounter, FinalScoreCounter).
 
 test_iterateSquaresInRow:-
      test_board3(_, Board),
-     iterateSquaresInRow(0, Board, 0).
+     iterateSquaresInRow(0, Board, FinalScoreCounter),
+     format('Final Score Counter: ~w', [FinalScoreCounter]).
+
 
  
