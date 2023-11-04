@@ -246,12 +246,30 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T]
     Acc1 is Acc + 1,
     calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
+calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T], PlacedPiecesDark, Acc, NumPieces):-
+    calculate_position(light_player, Pos, X, Y),
+    Y =< Column,
+    calculateEndPos(Pos, Direction, Piece, EndPos),
+    calculate_position(light_player, EndPos, _, EndY),
+    EndY >= Column,
+    Acc1 is Acc + 1,
+    calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
+
 calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
     calculate_position(light_player, Pos, X, Y),
     Y =:= Column,
     calculateEndPos(Pos, Direction, Piece, EndPos),
     calculate_position(light_player, EndPos, _, EndY),
     EndY =:= Column,
+    Acc1 is Acc + 1,
+    calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
+
+calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
+    calculate_position(light_player, Pos, X, Y),
+    Y =< Column,
+    calculateEndPos(Pos, Direction, Piece, EndPos),
+    calculate_position(light_player, EndPos, _, EndY),
+    EndY >= Column,
     Acc1 is Acc + 1,
     calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
 
@@ -268,5 +286,6 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [_|T], A
 
 test_row :-
     test_board2(_, Board),
-    calculateNumberOfPiecesInRow(3, Board, [[piece2_2, 35, horizontal], [piece1_2, 49, vertical]], [[piece1_1, 41, vertical], [piece1_1, 32, horizontal]], NumPieces),
+    %calculateNumberOfPiecesInRow(3, Board, [[piece2_2, 35, horizontal], [piece1_2, 49, vertical]], [[piece1_1, 41, vertical], [piece1_1, 32, horizontal]], NumPieces),
+    calculateNumberOfPiecesInColumn(5, Board, [[piece2_2, 35, horizontal], [piece1_2, 65, vertical]], [[piece1_1, 25, vertical], [piece1_1, 95, horizontal]], NumPieces),
     format('~w\n', [NumPieces]).
