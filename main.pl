@@ -5,7 +5,8 @@
 
 % start_game initiates the game loop with an initial game state
 play :-
-    initial_state(State),
+    % initial_state(State),
+		test_placement_phase_state(State), % just to test
     game_loop(State).
 
 % initial_state(-State)
@@ -16,6 +17,10 @@ initial_state([0, [PlacementPhasePiecesDark, [], 0, 0], [PlacementPhasePiecesLig
 	append(InitialDarkPieces, [], PlacementPhasePiecesDark),
 	initial_light_pieces(InitialLightPieces),
 	append(InitialLightPieces, [], PlacementPhasePiecesLight).
+
+% just a state to test placement phase
+test_placement_phase_state([3, [_, [[piece2_1, 09, horizontal],[piece1_1, 29, horizontal],[piece1_1, 13, horizontal],[piece1_1, 38, horizontal],[piece2_1, 33, horizontal],[piece1_1, 57, vertical],[piece2_1, 53, horizontal],[piece3_1, 99, horizontal],[piece2_1, 94, horizontal]], 0, 7], [_,[[piece6_2, 12, horizontal],[piece4_2, 23, horizontal],[piece1_2, 30, vertical],[piece4_2, 33, horizontal],[piece1_2, 39, vertical],[piece1_2, 43, horizontal],[piece2_2, 56, horizontal],[piece1_2, 60, vertical],[piece2_2, 76, horizontal],[piece2_2, 80, horizontal],[piece3_2, 94, vertical],[piece3_2, 95, vertical],[piece2_2, 96, horizontal]],5,7],Board]) :- 
+	test_board2(_, Board).
 
 % game_loop(+State)
 game_loop(State) :-
