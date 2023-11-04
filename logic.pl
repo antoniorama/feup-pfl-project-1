@@ -129,7 +129,6 @@ test_place_nones:-
     display_board(NewBoard, 9, 10),
     display_footer_coords(10, 10).
 
-
 place_direction(Matrix, Value, X, Y, Length, NewMatrix, horizontal):-
     place_horizontal(Matrix, Value, X, Y, Length, NewMatrix).
 
@@ -140,7 +139,6 @@ place_direction(Matrix, Value, X, Y, Length, NewMatrix, vertical):-
 % places a piece (group of squares) horinzontally in the board
 place_horizontal(Matrix, _, _, _, 0, Matrix):- !.
 place_horizontal(Matrix, Value, X, Y, Length, NewMatrix):-
-    format('Length : ~w\n', [Length]),
     place_in_matrix(Matrix, X, Y, Value, TempMatrix),
     NewY is Y + 1,
     NewLength is Length - 1,
@@ -166,25 +164,27 @@ test_place_horizontal:-
     display_board(Pngbaby, 9, 10),
     display_footer_coords(10, 10).
 
-%Scoring phase
+% - Scoring phase -
 
-% Remove a piece from the board.
-%place function that puts nones here
-
-% ----------------------------------------
-% FEITO COM O COPILOT - pode n estar a dar
-% ----------------------------------------
-
-% calculateScoreUponRemoval(+Player, +Piece, +NumberIntersectedPieces, +NumberScoreCounters, -ScoreUponRemoval)
-calculateScoreUponRemoval(Piece, NumberIntersectedPieces, NumberScoreCounters, ScoreUponRemoval):-
+% calculateScoreUponRemoval(+Piece, +NumPieces, +NumScoreCounters, -Score)
+calculateScoreUponRemoval(Piece, NumPieces, NumScoreCounters, Score):-
+    NumScoreCounters > 0,
     piece_info(_, Value, _, _, Piece),
-    NumberScoreCounters > 0,
-    ScoreUponRemoval is NumberIntersectedPieces * Value * (NumberScoreCounters * 2).
+    Score is NumPieces * Value * (NumScoreCounters * 2).
 
-calculateScoreUponRemoval(Piece, NumberIntersectedPieces, NumberScoreCounters, ScoreUponRemoval):-
+calculateScoreUponRemoval(Piece, NumPieces, NumScoreCounters, Score):-
+    NumScoreCounters =:= 0,
     piece_info(_, Value, _, _, Piece),
-    NumberScoreCounters =:= 0,
-    ScoreUponRemoval is NumberIntersectedPieces * Value.
+    Score is NumPieces * Value.
+
+% get_number_pieces(+Direciton, +PosWhite, +Board, +PlacedPiecesDark, +PlacedPiecesLight, -NumberPieces)
+get_number_pieces(horizontal, PosWhite , Board, PlacedPiecesDark, PlacedPiecesLight, NumberPieces) :-
+    calculate_position_new(light_player, PosWhite, _, Y),
+    calculateNumberOfPiecesInRow(Y, Board, PlacedPiecesLight, PlacedPiecesDark, NumberPieces).
+
+get_number_pieces(vertical, PosWhite, Board, PlacedPiecesDark, PlacedPiecesLight, NumberPieces) :-
+    calculate_position_new(light_player, PosWhite, X, _),
+    calculateNumberOfPiecesInColumn(X, Board, PlacedPiecesLight, PlacedPiecesDark, NumberPieces).
 
 % PlacedPieces = [Piece, PosWhite, Direction]
 % calculateNumberOfPiecesInRow(+Row, +Board, +PlacedPiecesLight, +PlacedPiecesDark, -NumPieces)

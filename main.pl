@@ -20,8 +20,7 @@ initial_state([0, [PlacementPhasePiecesDark, [], 0, 0], [PlacementPhasePiecesLig
 % game_loop(+State)
 game_loop(State) :-
 	retrieve_turn_from_state(State, TurnNO),
-	TurnNO >= 0,
-	TurnNO =< 1,
+	turn_phase(TurnNO, placement_phase),
 	next_phase(State), !, 
 	write('Placement phase ends'), nl,
 	display_game(State),
@@ -51,14 +50,14 @@ show_player_piece(Piece):-
 	piece_info(N_Squares, Value, _, _, Piece),
 	format('~w | squares: ~w value: ~w \n\n', [Piece, N_Squares, Value]).
 
-show_placed_piece_info([Piece, PosWhite, Direction]):-
+show_placed_piece_info([Piece, PosWhite, Direction], Index):-
 	piece_info(N_Squares, Value, _, _, Piece),
-	format('~w | pos(white for now): ~w direction: ~w length: ~w value: ~w \n\n', [Piece, PosWhite, Direction, N_Squares, Value]).
+	format('~w ) ~w | pos (white for now): ~w direction: ~w length: ~w\n\n', [Index, Piece, PosWhite, Direction, N_Squares]).
 
 show_player_pieces(State) :-
   player_pieces(State, List),
 	retrieve_turn_from_state(State, TurnNO),
-  show_all_player_pieces(List, TurnNO).
+  show_all_player_pieces(List, TurnNO, 1).
 
 % Retrieves the list of pieces for the current player based on the state
 player_pieces([0, [Pieces, _, _, _], _, _], Pieces).
@@ -67,26 +66,30 @@ player_pieces([2, [_, PlacedPiecesInfo, _, _], _, _], PlacedPiecesInfo).
 player_pieces([3, _, [_, PlacedPiecesInfo, _, _], _], PlacedPiecesInfo).
 
 % Helper predicate to show all pieces from the list
-show_all_player_pieces([], _). % Base case: no more pieces to show
-show_all_player_pieces([Piece | RestPieces], TurnNO) :-
+show_all_player_pieces([], _, _). % Base case: no more pieces to show
+show_all_player_pieces([Piece | RestPieces], TurnNO, _) :-
 	turn_phase(TurnNO, placement_phase),
   show_player_piece(Piece),
-  show_all_player_pieces(RestPieces, TurnNO).
+  show_all_player_pieces(RestPieces, TurnNO, _).
 
 % Info : [Piece, PosWhite, Direction]
-show_all_player_pieces([Info | RestPieces], TurnNO) :-
+show_all_player_pieces([Info | RestPieces], TurnNO, Index) :-
 	turn_phase(TurnNO, scoring_phase),
-	print_list(Info),
-	show_placed_piece_info(Info),
-	show_all_player_pieces(RestPieces, TurnNO).
+	show_placed_piece_info(Info, Index),
+	NextIndex is Index + 1,
+	show_all_player_pieces(RestPieces, TurnNO, NextIndex).
+
+% show_scores(+State)
+show_scores([_, [_,_,ScoreDark, PieceRemovedLenghtDark], [_,_,ScoreLight, PieceRemovedLenghtLight], _]) :-
+	format('Dark Player - Score : ~w PieceRemovedLength : ~w\n', [ScoreDark, PieceRemovedLenghtDark]),
+	format('Light Player - Score : ~w PieceRemovedLength : ~w\n\n', [ScoreLight, PieceRemovedLenghtLight]).
 
 % TODO : This predicate could probably be made more concise (for human player)
 % choose_move(+State, -Move)
 % Gets the move by user input (for placement phase)
-choose_move(State, Move) :-
+choose_move(State, [UserInputPiece, UserInputSquare, UserInputDirection]) :-
 	retrieve_turn_from_state(State, TurnNO),
-	TurnNO >= 0,
-	TurnNO =< 1,
+	turn_phase(TurnNO, placement_phase),
 	write('Your pieces: \n\n'),
 	show_player_pieces(State),
 	write('Piece to place: '),
@@ -96,25 +99,26 @@ choose_move(State, Move) :-
 	read_number(UserInputSquare),
 	write('Direction to place (horizontal or vertical): '),
 	read(UserInputDirection),
-	clear_buffer,
-	append([UserInputPiece, UserInputSquare, UserInputDirection], [], Move).
+	clear_buffer.
 
 % Gets the move by user input (for scoring phase)
 choose_move(State, Move) :-
 	retrieve_turn_from_state(State, TurnNO),
 	turn_phase(TurnNO, scoring_phase),
+	show_scores(State),
 	write('Placed pieces: \n\n'),
 	show_player_pieces(State),
 	write('Piece to remove: '),
-	read(UserInputPiece),
-	clear_buffer,
-	write('First square of that piece, from left or top (ex: 04 or 54): '),
-	read_number(UserInputSquare),
-	write('Direction of that piece (horizontal or vertical): '),
-	read(UserInputDirection),
-	clear_buffer,
-	validate_move(State, Move),
-	append([UserInputPiece, UserInputSquare, UserInputDirection], [], Move).
+	read_number(UserInput),
+	get_move_from_placed_list(State, UserInput, Move),
+	validate_move(State, Move).
+
+% get_move_from_placed_list(+State, +Index, -Move)
+get_move_from_placed_list([2, [_, PlacedPiecesDark, _, _], _, _], Index, Move) :-
+	nth1(Index, PlacedPiecesDark, Move).
+
+get_move_from_placed_list([3, _, [_, PlacedPiecesLight, _, _], _], Index, Move) :-
+	nth1(Index, PlacedPiecesLight, Move).
 
 % validate_moves(+State, +Move)
 % validates a move
@@ -148,11 +152,20 @@ get_new_state([1, [PlacementPhasePiecesDark, PlacedPiecesDark, _, _], [Placement
 	append([[PlayedPiece, Square, Direction]], PlacedPiecesLight, NewPlayedPiecesList),
 	\+ canPlaceAPiece(NewBoard, PlacementPhasePiecesDark).
 
-get_new_state([2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], LightPlayerInfo, Board], PlayedPiece, Square, Direction, NewBoard, [3, [PlacementPhasePiecesDark, NewList, ScoreDark, PieceRemovedLenghtDark], LightPlayerInfo, Board]) :-
-	delete_element_from_list(PlayedPiece, PlacedPiecesDark, NewList).
+get_new_state([2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], Board], PlayedPiece, Square, Direction, NewBoard, [3, [PlacementPhasePiecesDark, NewList, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], NewBoard]) :-
+	delete_element_from_list([PlayedPiece, Square, Direction], PlacedPiecesDark, NewList),
+	NumScoreCounters is 0, % temporario
+	calculate_pos_to_pos(dark_player, Square, WhiteSquare),
+	get_number_pieces(Direction, WhiteSquare, NewBoard, NewList, PlacedPiecesLight, NumPieces),
+	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
+	format('ScoreToAdd: ~w\n\n', [ScoreToAdd]). % to debug
 
-get_new_state([3, DarkPlayerInfo, [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], PlayedPiece, Square, Direction, NewBoard, [3, DarkPlayerInfo, [PlacementPhasePiecesLight, NewList, ScoreLight, PieceRemovedLengthLight], Board]) :-
-	delete_element_from_list(PlayedPiece, PlacedPiecesLight, NewList).
+get_new_state([3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], PlayedPiece, Square, Direction, NewBoard, [2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, ScoreLight, PieceRemovedLengthLight], NewBoard]) :-
+	delete_element_from_list([PlayedPiece, Square, Direction], PlacedPiecesLight, NewList),
+	NumScoreCounters is 0, % temporario
+	get_number_pieces(Direction, Square, NewBoard, PlacedPiecesDark, NewList, NumPieces),
+	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
+	format('ScoreToAdd: ~w\n\n', [ScoreToAdd]). % to debug
 
 % move(+State, +Move, -NewState)
 % Update the game state based on the move
@@ -180,8 +193,7 @@ display_game([TurnNO,_,_,Board]) :-
 % next_phase(+State)
 % Verification if the game should move from placing phase to scoring phase
 next_phase([TurnNO, [PlacementPhasePiecesDark,_,_,_], [PlacementPhasePiecesLight,_,_,_], Board]) :-
-	TurnNO >= 0,
-	TurnNO =< 1,
+	turn_phase(TurnNO, placement_phase),
 	\+canPlaceAPiece(Board, PlacementPhasePiecesDark),
 	\+canPlaceAPiece(Board, PlacementPhasePiecesLight).
 
