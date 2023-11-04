@@ -23,6 +23,7 @@ test_placement_phase_state([3, [_, [[piece2_1, 09, horizontal],[piece1_1, 29, ho
 	test_board2(_, Board).
 
 % game_loop(+State)
+% check switching phases
 game_loop(State) :-
 	retrieve_turn_from_state(State, TurnNO),
 	turn_phase(TurnNO, placement_phase),
@@ -32,6 +33,14 @@ game_loop(State) :-
 	build_scoring_phase_state(State, NewState),
 	game_loop(NewState).
 
+% check ending game
+game_loop(State) :-
+	retrieve_turn_from_state(State, TurnNO),
+	turn_phase(TurnNO, scoring_phase),
+	game_over(State, Winner), !,
+	format('GAME OVER, winner is ~w\n', [Winner]).
+
+% main game loop
 game_loop(State) :-
     % Display the current state of the game
     display_game(State),
@@ -165,7 +174,17 @@ get_new_state([2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceR
 	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
 	NewScore is ScoreDark + ScoreToAdd,
 	piece_info(NewPieceRemovedLength, _, _, _, PlayedPiece),
-	format('ScoreToAdd: ~w\n\n', [ScoreToAdd]). % to debug
+	\+ cannot_play(light_player, [3, [PlacementPhasePiecesDark, NewList, NewScore, NewPieceRemovedLength], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], NewBoard]).
+
+get_new_state([2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], Board], PlayedPiece, Square, Direction, NewBoard, [2, [PlacementPhasePiecesDark, NewList, NewScore, NewPieceRemovedLength], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], NewBoard]) :-
+	delete_element_from_list([PlayedPiece, Square, Direction], PlacedPiecesDark, NewList),
+	NumScoreCounters is 0, % temporario
+	calculate_pos_to_pos(dark_player, Square, WhiteSquare),
+	get_number_pieces(Direction, WhiteSquare, NewBoard, NewList, PlacedPiecesLight, NumPieces),
+	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
+	NewScore is ScoreDark + ScoreToAdd,
+	piece_info(NewPieceRemovedLength, _, _, _, PlayedPiece),
+	cannot_play(light_player, [3, [PlacementPhasePiecesDark, NewList, NewScore, NewPieceRemovedLength], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], NewBoard]).
 
 get_new_state([3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], PlayedPiece, Square, Direction, NewBoard, [2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, NewScore, NewPieceRemovedLength], NewBoard]) :-
 	delete_element_from_list([PlayedPiece, Square, Direction], PlacedPiecesLight, NewList),
@@ -174,7 +193,16 @@ get_new_state([3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceR
 	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
 	NewScore is ScoreLight + ScoreToAdd,
 	piece_info(NewPieceRemovedLength, _, _, _, PlayedPiece),
-	format('ScoreToAdd: ~w\n\n', [ScoreToAdd]). % to debug
+	\+ cannot_play(dark_player, [2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, NewScore, NewPieceRemovedLength], NewBoard]).
+
+get_new_state([3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], PlayedPiece, Square, Direction, NewBoard, [3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, NewScore, NewPieceRemovedLength], NewBoard]) :-
+	delete_element_from_list([PlayedPiece, Square, Direction], PlacedPiecesLight, NewList),
+	NumScoreCounters is 0, % temporario
+	get_number_pieces(Direction, Square, NewBoard, PlacedPiecesDark, NewList, NumPieces),
+	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
+	NewScore is ScoreLight + ScoreToAdd,
+	piece_info(NewPieceRemovedLength, _, _, _, PlayedPiece),
+	cannot_play(dark_player, [2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, NewScore, NewPieceRemovedLength], NewBoard]).
 
 % move(+State, +Move, -NewState)
 % Update the game state based on the move
@@ -205,6 +233,49 @@ next_phase([TurnNO, [PlacementPhasePiecesDark,_,_,_], [PlacementPhasePiecesLight
 	turn_phase(TurnNO, placement_phase),
 	\+canPlaceAPiece(Board, PlacementPhasePiecesDark),
 	\+canPlaceAPiece(Board, PlacementPhasePiecesLight).
+
+% game_over(+State, -Winner)
+% over by score
+game_over([_, [_, _, ScoreDark, _], _, _], dark_player) :-
+	ScoreDark >= 100.
+
+game_over([_, _, [_, _, ScoreLight, _], _], light_player) :-
+	ScoreLight >= 100.
+
+% over if both players can't play
+game_over(State, Winner) :- 
+	cannot_play(dark_player, State),
+	cannot_play(light_player, State),
+	get_winner(State, Winner).
+
+% cannot_play(+Player, +State)
+% a player cannot play if their largest piece is less than PieceRemovedLength -OR- they have 0 pieces
+cannot_play(dark_player, [_, [_, [], _, _], _, _]).
+cannot_play(light_player, [_, _, [_, [], _, _], _]).
+
+cannot_play(dark_player, [_, [_, PlacedPiecesDark, _, PieceRemovedLenghtDark], _, _]) :-
+	collect_first_elements(PlacedPiecesDark, PieceList),
+	piece_n_squares(PieceList, LengthList),
+	max_member(MaxLength, LengthList),
+	MaxLength < PieceRemovedLenghtDark.
+
+cannot_play(light_player, [_, _, [_, PlacedPiecesLight, _, PieceRemovedLenghtLight], _]) :-
+	collect_first_elements(PlacedPiecesLight, PieceList),
+	piece_n_squares(PieceList, LengthList),
+	max_member(MaxLength, LengthList),
+	MaxLength < PieceRemovedLenghtLight.
+
+% get_winner(+State, -Winner)
+% gets winner in case of both players not being able to play
+get_winner([_, [_, _, ScoreDark, _], [_, _, ScoreLight, _], _], dark_player) :-
+	ScoreDark > ScoreLight.
+
+get_winner([_, [_, _, ScoreDark, _], [_, _, ScoreLight, _], _], light_player) :-
+	ScoreLight > ScoreDark.
+
+% in case of draw
+% get_winner([_, [_, _, ScoreDark, _], [_, _, ScoreLight, _], _], light_player) :-
+%	ScoreLight =:= ScoreDark.
 
 % retrieve_turn_from_state(+State, -TurnNO)
 % gets the turn number from a State

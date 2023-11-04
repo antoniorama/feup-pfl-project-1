@@ -36,6 +36,27 @@ calculate_pos_to_pos(dark_player, Pos, NewPos):-
 delete_element_from_list(Element, List, NewList) :-
     select(Element, List, NewList).
 
+% base case: no more sublists
+collect_first_elements([], []).
+
+% recursive case: collect the first element of the head sublist and proceed with the tail
+collect_first_elements([[First|_] | RestSublists], [First | RestFirstElements]) :-
+    collect_first_elements(RestSublists, RestFirstElements).
+
+% Helper predicate that finds N_Squares for a single piece.
+piece_n_squares(PieceName, N_Squares) :-
+    piece_info(N_Squares, _, _, _, PieceName).
+
+% Base case: an empty list of pieces results in an empty list of N_Squares.
+list_n_squares([], []).
+
+% Recursive case: for a non-empty list of pieces, find the N_Squares for the head
+% and recursively process the tail.
+list_n_squares([PieceName | RestPieces], [N_Squares | RestNsquares]) :-
+    piece_n_squares(PieceName, N_Squares),
+    list_n_squares(RestPieces, RestNsquares).
+
+
 % read_number(-Number)
 % Unifies Number with input number from console
 read_number(X):-
