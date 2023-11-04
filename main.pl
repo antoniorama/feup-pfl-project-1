@@ -157,19 +157,23 @@ get_new_state([1, [PlacementPhasePiecesDark, PlacedPiecesDark, _, _], [Placement
 	append([[PlayedPiece, Square, Direction]], PlacedPiecesLight, NewPlayedPiecesList),
 	\+ canPlaceAPiece(NewBoard, PlacementPhasePiecesDark).
 
-get_new_state([2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], Board], PlayedPiece, Square, Direction, NewBoard, [3, [PlacementPhasePiecesDark, NewList, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], NewBoard]) :-
+get_new_state([2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], Board], PlayedPiece, Square, Direction, NewBoard, [3, [PlacementPhasePiecesDark, NewList, NewScore, NewPieceRemovedLength], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], NewBoard]) :-
 	delete_element_from_list([PlayedPiece, Square, Direction], PlacedPiecesDark, NewList),
 	NumScoreCounters is 0, % temporario
 	calculate_pos_to_pos(dark_player, Square, WhiteSquare),
 	get_number_pieces(Direction, WhiteSquare, NewBoard, NewList, PlacedPiecesLight, NumPieces),
 	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
+	NewScore is ScoreDark + ScoreToAdd,
+	piece_info(NewPieceRemovedLength, _, _, _, PlayedPiece),
 	format('ScoreToAdd: ~w\n\n', [ScoreToAdd]). % to debug
 
-get_new_state([3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], PlayedPiece, Square, Direction, NewBoard, [2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, ScoreLight, PieceRemovedLengthLight], NewBoard]) :-
+get_new_state([3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], PlayedPiece, Square, Direction, NewBoard, [2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, NewScore, NewPieceRemovedLength], NewBoard]) :-
 	delete_element_from_list([PlayedPiece, Square, Direction], PlacedPiecesLight, NewList),
 	NumScoreCounters is 0, % temporario
 	get_number_pieces(Direction, Square, NewBoard, PlacedPiecesDark, NewList, NumPieces),
 	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
+	NewScore is ScoreLight + ScoreToAdd,
+	piece_info(NewPieceRemovedLength, _, _, _, PlayedPiece),
 	format('ScoreToAdd: ~w\n\n', [ScoreToAdd]). % to debug
 
 % move(+State, +Move, -NewState)

@@ -166,24 +166,35 @@ test_place_horizontal:-
 
 % - Scoring phase -
 
+% base case: empty list
+apply_to_second_elements([], []).
+
+% recursive case: apply the function to the second element of each sublist
+apply_to_second_elements([[A, B, C] | Rest], [[A, NewB, C] | TransformedRest]) :-
+    calculate_pos_to_pos(dark_player, B, NewB),
+    apply_to_second_elements(Rest, TransformedRest).
+
 % calculateScoreUponRemoval(+Piece, +NumPieces, +NumScoreCounters, -Score)
 calculateScoreUponRemoval(Piece, NumPieces, NumScoreCounters, Score):-
     NumScoreCounters > 0,
     piece_info(_, Value, _, _, Piece),
     Score is NumPieces * Value * (NumScoreCounters * 2).
 
-calculateScoreUponRemoval(Piece, NumPieces, NumScoreCounters, NumPieces * Value):-
+calculateScoreUponRemoval(Piece, NumPieces, NumScoreCounters, Score):-
     NumScoreCounters =:= 0,
-    piece_info(_, Value, _, _, Piece).
+    piece_info(_, Value, _, _, Piece),
+    Score is NumPieces * Value.
 
 % get_number_pieces(+Direciton, +PosWhite, +Board, +PlacedPiecesDark, +PlacedPiecesLight, -NumberPieces)
 get_number_pieces(horizontal, PosWhite , Board, PlacedPiecesDark, PlacedPiecesLight, NumberPieces) :-
+    apply_to_second_elements(PlacedPiecesDark, ListConverted),
     calculate_position_new(light_player, PosWhite, _, Y),
-    calculateNumberOfPiecesInRow(Y, Board, PlacedPiecesLight, PlacedPiecesDark, NumberPieces).
+    calculateNumberOfPiecesInRow(Y, Board, PlacedPiecesLight, ListConverted, NumberPieces).
 
 get_number_pieces(vertical, PosWhite, Board, PlacedPiecesDark, PlacedPiecesLight, NumberPieces) :-
+apply_to_second_elements(PlacedPiecesDark, ListConverted),
     calculate_position_new(light_player, PosWhite, X, _),
-    calculateNumberOfPiecesInColumn(X, Board, PlacedPiecesLight, PlacedPiecesDark, NumberPieces).
+    calculateNumberOfPiecesInColumn(X, Board, PlacedPiecesLight, ListConverted, NumberPieces).
 
 % PlacedPieces = [Piece, PosWhite, Direction]
 % calculateNumberOfPiecesInRow(+Row, +Board, +PlacedPiecesLight, +PlacedPiecesDark, -NumPieces)
@@ -243,6 +254,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T]
     calculate_position(light_player, EndPos, _, EndY),
     EndY =:= Column,
     Acc1 is Acc + 1,
+    format('dPIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T], PlacedPiecesDark, Acc, NumPieces):-
@@ -252,6 +264,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T]
     calculate_position(light_player, EndPos, _, EndY),
     EndY >= Column,
     Acc1 is Acc + 1,
+    format('c PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
@@ -261,6 +274,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece,
     calculate_position(light_player, EndPos, _, EndY),
     EndY =:= Column,
     Acc1 is Acc + 1,
+    format('a PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
@@ -270,6 +284,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece,
     calculate_position(light_player, EndPos, _, EndY),
     EndY >= Column,
     Acc1 is Acc + 1,
+    format('b PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, [_|T], PlacedPiecesDark, Acc, NumPieces):-
