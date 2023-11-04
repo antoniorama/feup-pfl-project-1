@@ -286,6 +286,11 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [_|T], A
 
 test_row :-
     test_board2(_, Board),
-    %calculateNumberOfPiecesInRow(3, Board, [[piece2_2, 35, horizontal], [piece1_2, 49, vertical]], [[piece1_1, 41, vertical], [piece1_1, 32, horizontal]], NumPieces),
+    calculateNumberOfPiecesInRow(3, Board, [[piece2_2, 35, horizontal], [piece1_2, 49, vertical]], [[piece1_1, 41, vertical], [piece1_1, 32, horizontal]], NumPieces),
+    format('~w\n', [NumPieces]).
+
+test_column :-
+    test_board2(_, Board),
     calculateNumberOfPiecesInColumn(5, Board, [[piece2_2, 35, horizontal], [piece1_2, 65, vertical]], [[piece1_1, 25, vertical], [piece1_1, 95, horizontal]], NumPieces),
     format('~w\n', [NumPieces]).
+ 
