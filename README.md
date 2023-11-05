@@ -114,7 +114,7 @@ move([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemov
 ### Computer Plays
 
 [Describe how the computer selects a move using the `choose_move/4` predicate based on different levels of difficulty.]
-## Level 2 Bot
+#### Level 2 Bot
 
 The core of the Level 2 bot's decision-making process in our game is encapsulated in the `choose_move/4` predicate. This predicate, unlike the random selection method employed by the Level 1 bot, implements a strategic approach through the Minimax algorithm. The Minimax algorithm is a backtracking algorithm that is used in decision-making and game theory to find the optimal move for a player, assuming that the opponent is also playing optimally.
 
