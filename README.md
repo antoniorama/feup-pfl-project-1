@@ -61,6 +61,8 @@ If any player cannot remove any of his tiles on his turn, he passes and is out o
 ### Move Validation and Execution
 
 [Describe the predicate `move/3` for validating and executing a play.]
+![move(+GameState, +Move, -NewGameState)](https://github.com/antoniorama/pfl/assets/93871576/2c91140e-0823-4c58-b0ab-919133b6cc23)
+
 
 ### List of Valid Moves
 
