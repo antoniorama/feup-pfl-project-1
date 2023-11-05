@@ -123,6 +123,9 @@ withOrWithoutCounter(l4S, l4_).
 withOrWithoutCounter(l6s, l6_).
 withOrWithoutCounter(l6S, l6_).
 
+withOrWithoutCounter(S, none).
+withOrWithoutCounter(s, none).
+
 % square_to_display(+Square, -Display)
 square_to_display(d1_, ' P1 ').
 square_to_display(d2_, ' P2 ').
