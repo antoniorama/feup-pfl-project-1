@@ -254,7 +254,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T]
     calculate_position(light_player, EndPos, _, EndY),
     EndY =:= Column,
     Acc1 is Acc + 1,
-    format('dPIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
+format('dPIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T], PlacedPiecesDark, Acc, NumPieces):-
@@ -264,7 +264,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T]
     calculate_position(light_player, EndPos, _, EndY),
     EndY >= Column,
     Acc1 is Acc + 1,
-    format('c PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
+format('c PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
@@ -274,7 +274,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece,
     calculate_position(light_player, EndPos, _, EndY),
     EndY =:= Column,
     Acc1 is Acc + 1,
-    format('a PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
+format('a PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
@@ -284,7 +284,6 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece,
     calculate_position(light_player, EndPos, _, EndY),
     EndY >= Column,
     Acc1 is Acc + 1,
-    format('ddd PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, [_|T], PlacedPiecesDark, Acc, NumPieces):-
@@ -343,30 +342,23 @@ findScoreCountersPositions(Board, Pos, LightPos, DarkPos, FinalLightPos, FinalDa
     element_at(Board, Pos, Element),
     square_info(_, _, none, Element),
     NewPos is Pos + 1,
-    write('ccc\n'),
-    format('~w', [LightPos]),
     findScoreCountersPositions(Board, NewPos, LightPos, DarkPos, FinalLightPos, FinalDarkPos).
 
 findScoreCountersPositions(Board, Pos, _, DarkPos, FinalLightPos, FinalDarkPos):-
     element_at(Board, Pos, Element),
     square_info(_, _, sc_light, Element),
     NewPos is Pos + 1,
-    write('cc\n'),
     findScoreCountersPositions(Board, NewPos, Pos, DarkPos, FinalLightPos, FinalDarkPos).
 
 findScoreCountersPositions(Board, Pos, LightPos, _, FinalLightPos, FinalDarkPos):-
     element_at(Board, Pos, Element),
     square_info(_, _, sc_dark, Element),
     NewPos is Pos + 1,
-    write('c\n'),
     findScoreCountersPositions(Board, NewPos, LightPos, Pos, FinalLightPos, FinalDarkPos).
 
 findScoreCountersPositions(_, 100, LightPos, DarkPos, ConvertedLightPos, ConvertedDarkPos):- 
-    write('b\n'),
     calculate_position(light_player, LightPos, LightRow, LightColumn),
-    write('bb\n'),
-    calculate_position(_player, DarkPos, DarkRow, DarkColumn), 
-    write('bbb\n'),
+    calculate_position(dark_player, DarkPos, DarkRow, DarkColumn), 
     ConvertedLightRow is 90 - (LightRow * 10),
     ConvertedDarkRow is 90 - (DarkRow * 10),
     ConvertedLightPos is ConvertedLightRow + LightColumn,
@@ -417,7 +409,7 @@ test_accessBoardRow:-
 placeScoreCounterLightInitial(Board, NewBoard):-
     element_at(Board, 0, none),
     place_in_matrix(Board, 0, 0, slight, NewBoard).
-    
+
 placeScoreCounterLightInitial(Board, NewBoard):-
     element_at(Board, 0, Element),
     format('Element: ~w\n', [Element]),
@@ -425,7 +417,6 @@ placeScoreCounterLightInitial(Board, NewBoard):-
     format('ElementWithScoreCounter: ~w\n', [ElementWithScoreCounter]),
     place_in_matrix(Board, 0, 0, ElementWithScoreCounter, NewBoard).
 
-%placeScoreCounterDarkInitial(+Board, -NewBoard)
 placeScoreCounterDarkInitial(Board, NewBoard):-
     element_at(Board, 99, none),
     place_in_matrix(Board, 9, 9, sdark, NewBoard).
@@ -439,8 +430,8 @@ placeScoreCounterDarkInitial(Board, NewBoard):-
 
 test_placeSC:-
     test_board3(_, Board),
-    placeScoreCounterLightInitial(Board, IntermediateBoard), % Apply the light counter
-    placeScoreCounterDarkInitial(IntermediateBoard, NewBoard), % Then apply the dark counter with the result from the first call
+    placeScoreCounterDarkInitial(Board, IntermediateBoard),
+    placeScoreCounterLightInitial(IntermediateBoard, NewBoard),
     display_header_coords(10, 10),
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
@@ -486,27 +477,104 @@ test_placeSC2:-
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
 
+
 %predicate that updates Score Counter's position on the board based on the score of the player
 %updateScoreCounter(+ScoreLight, +ScoreDark, +Board,  -NewBoard)
 
 updateScoreCounter(ScoreLight, ScoreDark, Board, NewBoard):-
-    write('a\n'),
     findScoreCountersPositions(Board, 0, _, _, LightPos, DarkPos),
-    write('aa\n'),
+
     rewritePieceInBoard(Board, LightPos, IntermediateBoard1),         % Remove the old light score counter
-    write('aaa\n'),
     rewritePieceInBoard(IntermediateBoard1, DarkPos, IntermediateBoard2), % Remove the old dark score counter
-    write('aaaa\n'),
     placeScoreCounterLight(IntermediateBoard2, ScoreLight, IntermediateBoard3),   % Place the new light score counter
-    write('aaaaa\n'),
     calculate_position(dark_player, ScoreDark, ScoreRow, ScoreColumn),
-    write('aaaaaa\n'),
     ConvertedScoreDark is ScoreRow * 10 + ScoreColumn,
     placeScoreCounterDark(IntermediateBoard3, ConvertedScoreDark, NewBoard).   % Place the new dark score counter
 
+
 test_updateScoreCounter:-
     test_board3(_, Board),
-    updateScoreCounter(20, 0, Board, NewBoard),
+    updateScoreCounter(51, 46, Board, NewBoard),
     display_header_coords(10, 10),
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
+
+
+%The minimax algorithm should be used in the scoring phase. Players would aim to maximize their scores while minimizing the potential scoring of the opponent.
+% Base case of recursion: if the game is over, evaluate the utility of the board
+% minimax(+Position, +Depth, +Player, -Utility, -Move)
+minimax(Position, _, Player, Utility, []) :-
+    game_over(Position),
+    !,
+    evaluate(Position, Player, Utility).
+
+% Recursive case: if the game is not over, and it is the maximizer's turn
+% minimax(+Position, +Depth, +Player, -Utility, -Move)
+minimax(Position, Depth, maximizer, BestUtility, BestMove) :-
+    Depth > 0,
+    valid_moves(Position, maximizer, Moves),
+    NewDepth is Depth - 1,
+    find_best_move(Moves, NewDepth, maximizer, -inf, [], BestUtility, BestMove).
+
+% Recursive case: if the game is not over, and it is the minimizer's turn
+% minimax(+Position, +Depth, +Player, -Utility, -Move)
+minimax(Position, Depth, minimizer, BestUtility, BestMove) :-
+    Depth > 0,
+    valid_moves(Position, minimizer, Moves),
+    NewDepth is Depth - 1,
+    find_best_move(Moves, NewDepth, minimizer, inf, [], BestUtility, BestMove).
+
+% Evaluate a list of moves and find the best one, updating the best utility found so far
+% find_best_move(+Moves, +Depth, +Player, +CurrentBestUtility, +CurrentBestMove, -BestUtility, -BestMove)
+find_best_move([], _, _, BestUtility, BestMove, BestUtility, BestMove).
+find_best_move([Move|Moves], Depth, Player, CurrentBestUtility, CurrentBestMove, BestUtility, BestMove) :-
+    move(Position, Move, NewPosition),
+    switch_player(Player, NextPlayer),
+    minimax(NewPosition, Depth, NextPlayer, Utility, _),
+    update_best_utility(Utility, Move, Player, CurrentBestUtility, CurrentBestMove, NewCurrentBestUtility, NewCurrentBestMove),
+    find_best_move(Moves, Depth, Player, NewCurrentBestUtility, NewCurrentBestMove, BestUtility, BestMove).
+
+% Update the best utility found so far for maximizer
+update_best_utility(Utility, Move, maximizer, CurrentBestUtility, _, Utility, Move) :-
+    greater_than(Utility, CurrentBestUtility).
+update_best_utility(Utility, Move, maximizer, BestUtility, BestMove, BestUtility, BestMove) :-
+    not_greater_than(Utility, BestUtility).
+
+% Update the best utility found so far for minimizer
+update_best_utility(Utility, Move, minimizer, CurrentBestUtility, _, Utility, Move) :-
+    less_than(Utility, CurrentBestUtility).
+update_best_utility(Utility, Move, minimizer, BestUtility, BestMove, BestUtility, BestMove) :-
+    not_less_than(Utility, BestUtility).
+
+% Helper predicates to compare utilities without using = or ==
+greater_than(Utility, CurrentBestUtility) :-
+    Utility > CurrentBestUtility.
+not_greater_than(Utility, BestUtility) :-
+    Utility =< BestUtility.
+
+less_than(Utility, CurrentBestUtility) :-
+    Utility < CurrentBestUtility.
+not_less_than(Utility, BestUtility) :-
+    Utility >= BestUtility.
+
+% Switch player helper
+switch_player(maximizer, minimizer).
+switch_player(minimizer, maximizer).
+
+% Game-specific predicates that need to be defined:
+% game_over(Position) - Determines if the game is over.
+% valid_moves(Position, Player, Moves) - Generates a list of valid moves for the player.
+% move(Position, Move, NewPosition) - Applies a move to a position.
+% evaluate(Position, Player, Utility) - Evaluates the position for a player.
+
+
+% choose_move(+GameState, +Player, +Level, -Move)
+choose_move(GameState, Player, 1, Move) :-
+    % For Level 1, select a random move
+    valid_moves(GameState, Player, Moves),
+    random_member(Move, Moves).
+
+choose_move(GameState, Player, 2, Move) :-
+    % For Level 2, use the minimax algorithm to select the best move
+    determine_depth(Level, Depth), % You need to define how you determine the depth based on level or other factors
+    minimax(GameState, Depth, Player, Utility-Move).
