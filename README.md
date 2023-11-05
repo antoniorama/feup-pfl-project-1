@@ -266,10 +266,16 @@ game_over(State, Winner) :-
 
 ### Computer Plays
 
-[Describe how the computer selects a move using the `choose_move/4` predicate based on different levels of difficulty.]
+#### Level 1 Bot
+We developed a **Level 1** bot that plays **random moves**. It is only working for the placement phase.
+
+It chooses a move in the **choose_move/4** rule. It picks a random Piece from the PlacementPieceList of the respective player and tries placing it in a random square in a random position. If it can do it, then it plays it, if it can't, then it picks another Move and tries with that one. 
+
+This bot is not implemented for the scoring phase. However, it could simply choose a random piece to remove from the board.
+
 #### Level 2 Bot
 
-The core of the Level 2 bot's decision-making process in our game is encapsulated in the `choose_move/4` predicate. This predicate, unlike the random selection method employed by the Level 1 bot, implements a strategic approach through the Minimax algorithm. The Minimax algorithm is a backtracking algorithm that is used in decision-making and game theory to find the optimal move for a player, assuming that the opponent is also playing optimally.
+The core of the **Level 2** bot's decision-making process in our game is encapsulated in the `choose_move/4` predicate. This predicate, unlike the random selection method employed by the Level 1 bot, implements a strategic approach through the Minimax algorithm. The Minimax algorithm is a backtracking algorithm that is used in decision-making and game theory to find the optimal move for a player, assuming that the opponent is also playing optimally.
 
 In the context of our Prolog-based game, the `choose_move/4` predicate operates as follows when applied to the Level 2 bot:
 
