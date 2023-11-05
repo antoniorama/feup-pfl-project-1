@@ -399,3 +399,34 @@ test_accessBoardRow:-
     nth0(2, Board, BoardRow),
     nth0(0, BoardRow, Element),
     format('Element: ~w\n', [Element]).
+
+%predicate that positions the score counters in the bottom left corner and top right corner
+%if there is already a piece in the square ex l1_, replace it by l1s or l1S, depending on the color s or S of the score counter.
+placeScoreCounterLight(Board, NewBoard):-
+    element_at(Board, 0, none),
+    place_in_matrix(Board, 0, 0, slight, NewBoard).
+    
+placeScoreCounterDark(Board, NewBoard):-
+    element_at(Board, 0, Element),
+    format('Element: ~w\n', [Element]),
+    withOrWithoutCounter(ElementWithScoreCounter, Element),
+    format('ElementWithScoreCounter: ~w\n', [ElementWithScoreCounter]),
+    place_in_matrix(Board, 0, 0, ElementWithScoreCounter, NewBoard).
+
+placeScoreCOunterDark(Board, NewBoard):-
+    element_at(Board, 99, none),
+    place_in_matrix(Board, 9, 9, sdark, NewBoard).
+
+placeScoreCounterDark(Board, NewBoard):-
+    element_at(Board, 99, Element),
+    format('Element: ~w\n', [Element]),
+    withOrWithoutCounter(ElementWithScoreCounter, Element),
+    format('ElementWithScoreCounter: ~w\n', [ElementWithScoreCounter]),
+    place_in_matrix(Board, 9, 9, ElementWithScoreCounter, NewBoard).
+
+test_placeSC:-
+    test_board3(_, Board),
+    placeScoreCounterDark(Board, NewBoard),
+    display_header_coords(10, 10),
+    display_board(NewBoard, 9, 10),
+    display_footer_coords(10, 10).
