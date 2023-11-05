@@ -413,7 +413,7 @@ placeScoreCounterLightInitial(Board, NewBoard):-
 placeScoreCounterLightInitial(Board, NewBoard):-
     element_at(Board, 0, Element),
     format('Element: ~w\n', [Element]),
-    withOrWithoutCounter(ElementWithScoreCounter, Element),
+    withOrWithoutCounterLight(ElementWithScoreCounter, Element),
     format('ElementWithScoreCounter: ~w\n', [ElementWithScoreCounter]),
     place_in_matrix(Board, 0, 0, ElementWithScoreCounter, NewBoard).
 
@@ -425,7 +425,7 @@ placeScoreCounterDarkInitial(Board, NewBoard):-
 placeScoreCounterDarkInitial(Board, Pos, NewBoard):-
     element_at(Board, 99, Element),
     format('Element: ~w\n', [Element]),
-    withOrWithoutCounter(ElementWithScoreCounter, Element),
+    withOrWithoutCounterDark(ElementWithScoreCounter, Element),
     format('ElementWithScoreCounter: ~w\n', [ElementWithScoreCounter]),
     place_in_matrix(Board, 9, 9, ElementWithScoreCounter, NewBoard).
 
@@ -451,7 +451,7 @@ placeScoreCounterLight(Board, Pos, NewBoard):-
     format('Element: ~w\n', [Element]),
     Row is Pos // 10,
     Col is Pos mod 10,
-    withOrWithoutCounter(ElementWithScoreCounter, Element),
+    withOrWithoutCounterLight(ElementWithScoreCounter, Element),
     format('ElementWithScoreCounter: ~w\n', [ElementWithScoreCounter]),
     place_in_matrix(Board, Row, Col, ElementWithScoreCounter, NewBoard).
 
@@ -466,7 +466,7 @@ placeScoreCounterDark(Board, Pos, NewBoard):-
     format('Element: ~w\n', [Element]),
     Row is Pos // 10,
     Col is Pos mod 10,
-    withOrWithoutCounter(ElementWithScoreCounter, Element),
+    withOrWithoutCounterDark(ElementWithScoreCounter, Element),
     format('ElementWithScoreCounter: ~w\n', [ElementWithScoreCounter]),
     place_in_matrix(Board, Row, Col, ElementWithScoreCounter, NewBoard).
 

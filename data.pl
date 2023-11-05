@@ -100,7 +100,34 @@ square_info(dark_player, _, sc_dark, sdark).
 square_info(_, _, _, none).
 
 %withOrWithoutCounter(?PieceWithCounter, ?PieceWithoutCounter).
+%useful to remove score counter from a piece
+withOrWithoutCounter(d1s, d1_).
+withOrWithoutCounter(d1S, d1_).
+withOrWithoutCounter(d2s, d2_).
+withOrWithoutCounter(d2S, d2_).
+withOrWithoutCounter(d3s, d3_).
+withOrWithoutCounter(d3S, d3_).
+withOrWithoutCounter(d4s, d4_).
+withOrWithoutCounter(d4S, d4_).
+withOrWithoutCounter(d6s, d6_).
+withOrWithoutCounter(d6S, d6_).
 
+withOrWithoutCounter(l1s, l1_).
+withOrWithoutCounter(l1S, l1_).
+withOrWithoutCounter(l2s, l2_).
+withOrWithoutCounter(l2S, l2_).
+withOrWithoutCounter(l3s, l3_).
+withOrWithoutCounter(l3S, l3_).
+withOrWithoutCounter(l4s, l4_).
+withOrWithoutCounter(l4S, l4_).
+withOrWithoutCounter(l6s, l6_).
+withOrWithoutCounter(l6S, l6_).
+
+withOrWithoutCounter(S, none).
+withOrWithoutCounter(s, none).
+
+
+%useful to add score counter on top of a piece
 withOrWithoutCounterLight(d1s, d1_).
 withOrWithoutCounterDark(d1S, d1_).
 withOrWithoutCounterLight(d2s, d2_).
