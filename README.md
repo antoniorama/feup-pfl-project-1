@@ -81,7 +81,13 @@ If any player cannot remove any of his tiles on his turn, he passes and is out o
 
 ## Conclusions
 
-[Discuss the conclusions about the work carried out, limitations of the program, and possible improvements.]
+The development of this game was a multifaceted challenge that required the team to delve into complex logic structures and interactive design using Prolog, which is not commonly employed for game development. Successfully implementing the game's rules in a logical and user-friendly manner represents a significant accomplishment for our group.
+
+Throughout the project, we encountered several constraints. Prolog's unique paradigm presented a steep learning curve, particularly in terms of state representation and visualization. Moreover, due to the language's limitations in graphical interfaces, the game lacks a modern, engaging UI which could potentially enhance user experience.
+
+Implementing a more sophisticated AI by incorporating learning algorithms could provide a richer and more challenging gameplay experience.
+
+In conclusion, this project not only provided a hands-on experience with Prolog but also contributed to the understanding of its capabilities and limitations within the scope of game development.
 
 ## Bibliography
 
