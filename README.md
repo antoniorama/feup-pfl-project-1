@@ -49,7 +49,40 @@ If any player cannot remove any of his tiles on his turn, he passes and is out o
 
 ### Internal Game State Representation
 
-[Describe how the game state is represented in Prolog, including examples of initial, intermediate, and final states.]
+Our Game State (referred in the code as State) has the following structure:
+
+[TurnoNO, PlayerDarkInfo, PlayerLightInfo, Board]
+
+TurnNO : 
+0 - dark_player (pretas) - placement phase
+1 - light_player (brancas) - placement phase
+2 - dark_player (pretas) - scoring phase
+3 - light_player(brancas) - scoring phase
+
+Each **PlayerInfo** (PlayerDarkInfo and PlayerLightInfo) list has the following information:
+[PlayerName, PlacementPhasePieces, PlacedPieces, Score, PieceRemovedLength]
+
+**PlayerName** is the name of the players, this is used to distinguish human players from bots, for example: dark_player, dark_bot1.
+
+**PlacementPhasePieces** is a list of pieces that starts with the pieces of the player according to the game rules, and that piece is removed when the player places it in the board during the placement phase.
+
+**PlacedPieces** is a list of moves (in the format [Piece, Position, Direction]) that the player makes during the placement phase. This is very helpful for the scoring phase.
+
+**Score** is the current score of the player.
+
+**PieceRemovedLength** is the length of the longest piece that the player has removed. This is important to keep track of because a player must not removed a piece that is shorter than the largest piece that he has removes during the scoring phase (this rule is not implemented in our game, but this field is updated accordingly on each move).
+
+**Board** is the current board of the game with the pieces, score counters and empty squares. It is represented by a matrix and is always 10x10.
+
+
+The **Starting State** looks like this: 
+[0, [dark_player, PlacementPhasePiecesDark, [], 0, 0], [light_player, PlacementPhasePiecesLight, [], 0, 0], Board].
+
+An **Intermediate State** (in the scoring phase) would look something like this:
+[3, [dark_player, PlacementPhasePiecesDarkReduced, [Move1, Move2, ...], 14, 3], [light_player, PlacementPhasePiecesLightReduced, [Move1, Move2, ...], 45, 4], Board].
+
+A **Final State** would look something like this:
+[2, [dark_player, PlacementPhasePiecesDarkReduced, [Move1, Move2, ..., MoveX], 65, 4], [light_player, PlacementPhasePiecesLightReduced, [Move1, Move2, ..., MoveX], 103, 5], Board].
 
 
 ### Game State Visualization
