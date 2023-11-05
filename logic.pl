@@ -481,3 +481,18 @@ test_placeSC2:-
 
 %predicate that updates Score Counter's position on the board based on the score of the player
 %updateScoreCounter(+ScoreLight, +ScoreDark, +Board,  -NewBoard)
+
+updateScoreCounter(ScoreLight, ScoreDark, Board, NewBoard):-
+    findScoreCountersPositions(Board, 0, ScoreLight, ScoreDark, LightPos, DarkPos),
+    rewritePieceInBoard(Board, LightPos, IntermediateBoard1),         % Remove the old light score counter
+    rewritePieceInBoard(IntermediateBoard1, DarkPos, IntermediateBoard2), % Remove the old dark score counter
+    placeScoreCounterLight(IntermediateBoard2, ScoreLight, IntermediateBoard3),   % Place the new light score counter
+    placeScoreCounterDark(IntermediateBoard3, ScoreDark, NewBoard).   % Place the new dark score counter
+
+
+test_updateScoreCounter:-
+    test_board3(_, Board),
+    updateScoreCounter(1, 5, Board, NewBoard),
+    display_header_coords(10, 10),
+    display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
+    display_footer_coords(10, 10).
