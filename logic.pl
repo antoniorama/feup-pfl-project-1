@@ -368,7 +368,6 @@ findScoreCountersPositions(_, 100, LightPos, DarkPos, ConvertedLightPos, Convert
     ConvertedLightPos is ConvertedLightRow + LightColumn,
     ConvertedDarkPos is ConvertedDarkRow + DarkColumn.
 
-
 test_findScoreCountersPositions:-
     test_board3(_, Board),
     findScoreCountersPositions(Board, 0, _, _, LightPos, DarkPos),
@@ -495,6 +494,36 @@ updateScoreCounter(ScoreLight, ScoreDark, Board, NewBoard):-
     ConvertedScoreDark is ScoreRow * 10 + ScoreColumn,
     placeScoreCounterDark(IntermediateBoard3, ConvertedScoreDark, NewBoard).   % Place the new dark score counter
 
+% pieceHasScoreCounter(+Board, +Piece, +StartPos, +Direction)
+% checks if piece has any square with a score counter
+pieceHasScoreCounter(Board, Piece, StartPos, horizontal) :-
+    findScoreCountersPositions(Board, 0, _, _, LightPos, _),
+    calculateEndPos(StartPos, horizontal, Piece, EndPos),
+    LigthPos >= StartPos,
+    LightPos =< EndPos.
+
+pieceHasScoreCounter(Board, Piece, StartPos, horizontal) :-
+    findScoreCountersPositions(Board, 0, _, _, _, DarkPos),
+    calculateEndPos(StartPos, horizontal, Piece, EndPos),
+    DarkPos >= StartPos,
+    DarkPos =< EndPos.
+
+pieceHasScoreCounter(Board, Piece, StartPos, vertical) :-
+    findScoreCountersPositions(Board, 0, _, _, LightPos, _),
+    calculateEndPos(StartPos, vertical, Piece, EndPos),
+    withinVerticalRange(StartPos, EndPos, LightPos).
+
+pieceHasScoreCounter(Board, Piece, StartPos, vertical) :-
+    findScoreCountersPositions(Board, 0, _, _, _, DarkPos),
+    calculateEndPos(StartPos, vertical, Piece, EndPos),
+    withinVerticalRange(StartPos, EndPos, DarkPos).
+
+% Helper predicate to check if the position is within the vertical range
+withinVerticalRange(StartPos, EndPos, Pos) :-
+    StartPos =< Pos,
+    Pos =< EndPos,
+    SameColumn is StartPos mod 10,
+    Pos mod 10 =:= SameColumn.
 
 test_updateScoreCounter:-
     test_board3(_, Board),
@@ -573,6 +602,7 @@ switch_player(minimizer, maximizer).
 
 
 % choose_move(+GameState, +Player, +Level, -Move)
+/*
 choose_move(GameState, Player, 1, Move) :-
     % For Level 1, select a random move
     valid_moves(GameState, Player, Moves),
@@ -582,3 +612,4 @@ choose_move(GameState, Player, 2, Move) :-
     % For Level 2, use the minimax algorithm to select the best move
     determine_depth(Level, Depth), % You need to define how you determine the depth based on level or other factors
     minimax(GameState, Depth, Player, Utility-Move).
+*/
