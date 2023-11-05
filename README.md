@@ -325,7 +325,7 @@ In conclusion, this project not only provided a hands-on experience with Prolog 
 
 ## Game Execution Images
 
-![Initial Game State](path/to/initial_state_image.png)
+(![Initial game state](https://github.com/antoniorama/pfl/assets/93871576/60b667e9-1c19-454d-a1b4-34000519ba58))
 *Initial game state.*
 
 ![Intermediate Game State](path/to/intermediate_state_image.png)
