@@ -56,6 +56,33 @@ If any player cannot remove any of his tiles on his turn, he passes and is out o
 ### Game State Visualization
 
 [Describe how the game state display predicate `display_game/2` is implemented, including the user interface and input validation.]
+The `display_game/2` predicate serves as a key component in visualizing the game state in a textual form for the player. This predicate takes a single argument, which is a list containing the current turn number (TurnNO) and the current state of the game board (Board). The game board is represented as a list of lists, with each sublist representing a row on the board.
+
+The predicate is implemented as a sequence of calls to other predicates, each responsible for displaying different parts of the game interface. Below is an overview of how display_game/2 operates:
+
+Clear Console: The clear_console predicate is called to clear the terminal screen. This ensures that the display starts fresh, providing a clear view of the current game state without any previous content cluttering the screen.
+
+Determine Board Size: The predicate sets Size to 10, which is the size for the game board (10x10). SizeMinusOne is calculated as Size - 1, which is used later to iterate over board coordinates.
+
+Display Header Coordinates: display_header_coords(Size, Size) is called with the board size as arguments. This predicate is responsible for displaying the top coordinates (column headers) of the board, providing a reference for the horizontal axis of the dark player.
+
+Display Board: display_board(Board, SizeMinusOne, Size) is called next. It takes the current board state, the maximum index for iteration (based on SizeMinusOne), and the size of the board. This predicate prints each row of the board along with the row numbers (row headers) for the light and dark players, thus visualizing the cells of the game board in the console.
+
+Display Footer Coordinates: display_footer_coords(Size, Size) is called, mirroring the header coordinates at the bottom of the board for the light player.
+
+Newlines: A series of newline characters are printed (nl, nl, nl) to provide visual separation between the board and the subsequent information.
+
+Display Turn: Finally, display_turn(TurnNO) is called to print the current turn number. This informs the player whose turn it is.
+
+Given the complexity of our game logic, we were suggested to use a fixed board size. Therefore, the input to display_game/2 is assumed to be validated beforehand. It expects the first argument to be a structured list with a turn number and a placeholder (_), and the second argument to be a game board that matches the expected size and structure. The game board is anticipated to be a square matrix of size 10x10, which is a typical requirement for many grid-based games.
+
+User Interface Considerations:
+Clarity: The user interface provided by this predicate is designed to be clear and understandable. The board is displayed with coordinates on both the top and bottom, making it easier for players to locate specific positions on the board.
+Consistency: The consistent use of Size ensures that if the board size were to change, adjustments could be made in a single place, and the rest of the display logic would adapt accordingly.
+
+In summary, the display_game/2 predicate encapsulates the user interface display logic for the game, rendering the game state in a textual format. It relies on several helper predicates to construct the overall view, with a focus on clarity and simplicity for the user experience.
+
+
 ```prolog
 
 display_game([TurnNO,_,_,Board]) :-
