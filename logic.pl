@@ -254,7 +254,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T]
     calculate_position(light_player, EndPos, _, EndY),
     EndY =:= Column,
     Acc1 is Acc + 1,
-format('dPIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
+    format('dPIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T], PlacedPiecesDark, Acc, NumPieces):-
@@ -264,7 +264,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, [[Piece, Pos, Direction]|T]
     calculate_position(light_player, EndPos, _, EndY),
     EndY >= Column,
     Acc1 is Acc + 1,
-format('c PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
+    format('c PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, T, PlacedPiecesDark, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
@@ -274,7 +274,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece,
     calculate_position(light_player, EndPos, _, EndY),
     EndY =:= Column,
     Acc1 is Acc + 1,
-format('a PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
+    format('a PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece, Pos, Direction]|T], Acc, NumPieces):-
@@ -284,6 +284,7 @@ calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, [[Piece,
     calculate_position(light_player, EndPos, _, EndY),
     EndY >= Column,
     Acc1 is Acc + 1,
+    format('ddd PIECE FOUND : ~w , ~w , ~w \n\n', [Piece, Pos, Direction]),
     calculateNumberOfPiecesInColumnHelper(Column, Board, PlacedPiecesLight, T, Acc1, NumPieces).
 
 calculateNumberOfPiecesInColumnHelper(Column, Board, [_|T], PlacedPiecesDark, Acc, NumPieces):-
@@ -342,23 +343,30 @@ findScoreCountersPositions(Board, Pos, LightPos, DarkPos, FinalLightPos, FinalDa
     element_at(Board, Pos, Element),
     square_info(_, _, none, Element),
     NewPos is Pos + 1,
+    write('ccc\n'),
+    format('~w', [LightPos]),
     findScoreCountersPositions(Board, NewPos, LightPos, DarkPos, FinalLightPos, FinalDarkPos).
 
 findScoreCountersPositions(Board, Pos, _, DarkPos, FinalLightPos, FinalDarkPos):-
     element_at(Board, Pos, Element),
     square_info(_, _, sc_light, Element),
     NewPos is Pos + 1,
+    write('cc\n'),
     findScoreCountersPositions(Board, NewPos, Pos, DarkPos, FinalLightPos, FinalDarkPos).
 
 findScoreCountersPositions(Board, Pos, LightPos, _, FinalLightPos, FinalDarkPos):-
     element_at(Board, Pos, Element),
     square_info(_, _, sc_dark, Element),
     NewPos is Pos + 1,
+    write('c\n'),
     findScoreCountersPositions(Board, NewPos, LightPos, Pos, FinalLightPos, FinalDarkPos).
 
 findScoreCountersPositions(_, 100, LightPos, DarkPos, ConvertedLightPos, ConvertedDarkPos):- 
+    write('b\n'),
     calculate_position(light_player, LightPos, LightRow, LightColumn),
+    write('bb\n'),
     calculate_position(_player, DarkPos, DarkRow, DarkColumn), 
+    write('bbb\n'),
     ConvertedLightRow is 90 - (LightRow * 10),
     ConvertedDarkRow is 90 - (DarkRow * 10),
     ConvertedLightPos is ConvertedLightRow + LightColumn,
@@ -422,7 +430,7 @@ placeScoreCounterDarkInitial(Board, NewBoard):-
     element_at(Board, 99, none),
     place_in_matrix(Board, 9, 9, sdark, NewBoard).
 
-placeScoreCounterDarkInitial(Board, Pos, NewBoard):-
+placeScoreCounterDarkInitial(Board, NewBoard):-
     element_at(Board, 99, Element),
     format('Element: ~w\n', [Element]),
     withOrWithoutCounterDark(ElementWithScoreCounter, Element),
@@ -478,24 +486,27 @@ test_placeSC2:-
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
 
-
 %predicate that updates Score Counter's position on the board based on the score of the player
 %updateScoreCounter(+ScoreLight, +ScoreDark, +Board,  -NewBoard)
 
 updateScoreCounter(ScoreLight, ScoreDark, Board, NewBoard):-
+    write('a\n'),
     findScoreCountersPositions(Board, 0, _, _, LightPos, DarkPos),
-
+    write('aa\n'),
     rewritePieceInBoard(Board, LightPos, IntermediateBoard1),         % Remove the old light score counter
+    write('aaa\n'),
     rewritePieceInBoard(IntermediateBoard1, DarkPos, IntermediateBoard2), % Remove the old dark score counter
+    write('aaaa\n'),
     placeScoreCounterLight(IntermediateBoard2, ScoreLight, IntermediateBoard3),   % Place the new light score counter
+    write('aaaaa\n'),
     calculate_position(dark_player, ScoreDark, ScoreRow, ScoreColumn),
+    write('aaaaaa\n'),
     ConvertedScoreDark is ScoreRow * 10 + ScoreColumn,
     placeScoreCounterDark(IntermediateBoard3, ConvertedScoreDark, NewBoard).   % Place the new dark score counter
 
-
 test_updateScoreCounter:-
     test_board3(_, Board),
-    updateScoreCounter(51, 46, Board, NewBoard),
+    updateScoreCounter(20, 0, Board, NewBoard),
     display_header_coords(10, 10),
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).

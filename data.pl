@@ -44,16 +44,16 @@ test_board2(10, [
 ]).
 
 test_board3(10, [
-	[none, d3_, d3_, d3_, none, none, none, d2_, d2_, none],
-	[l1_, d2_, l6_, l6_, l6_, l6_, l6_, l6_, l6_, l1_],
-	[l3S, none, d1_, l4_, l4_, l2s, l4_, l4_, l4_, l1_],
+	[d3_, d3_, d3_, d3_, d3_, d2s, d2_, d2_, d2_, none],
+	[l1_, none, l6_, l6_, l6_, l6_, l6_, l6_, l6_, l1_],
+	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],
 	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],
 	[l1_, none, d1_, l1_, l1_, l1_, d2_, d2_, d2_, d2_],
 	[l1_, none, none, none, l3_, l3_, l2_, l2_, l2_, l2_],
 	[l1_, d1_, d1_, d1_, l3_, l3_, d2_, d2_, d2_, d2_],
 	[d1_, d1_, d1_, none, l3_, l3_, l2_, l2_, l2_, l2_],
 	[l2_, l2_, l2_, l2_, l3_, l3_, d1_, d1_, d1_, none],
-	[d2_, d2_, d2_, d2_, l3_, l3_, l2_, l2_, l2_, l2_]
+	[d2_, d2_, d2_, d2_, l3_, l3_, l2_, l2_, l2_, l2S]
 ]).
 
 % square_info(?Player, ?Value, ?ScoreCounter, ?Square)

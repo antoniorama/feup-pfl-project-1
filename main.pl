@@ -5,14 +5,14 @@
 
 % start_game initiates the game loop with an initial game state
 play :-
-    % initial_state(State),
-		test_placement_phase_state(State), % just to test
+    initial_state(State),
+		% test_placement_phase_state(State), % just to test
     game_loop(State).
 
 % initial_state(-State)
 % initialize the state with turn to dark_player (0) and placement phase pieces
 initial_state([0, [PlacementPhasePiecesDark, [], 0, 0], [PlacementPhasePiecesLight, [], 0, 0], Board]) :-
-	test_board2(_, Board),
+	test_board3(_, Board),
 	initial_dark_pieces(InitialDarkPieces),
 	append(InitialDarkPieces, [], PlacementPhasePiecesDark),
 	initial_light_pieces(InitialLightPieces),
@@ -20,7 +20,7 @@ initial_state([0, [PlacementPhasePiecesDark, [], 0, 0], [PlacementPhasePiecesLig
 
 % just a state to test placement phase
 test_placement_phase_state([3, [_, [[piece2_1, 09, horizontal],[piece1_1, 29, horizontal],[piece1_1, 13, horizontal],[piece1_1, 38, horizontal],[piece2_1, 33, horizontal],[piece1_1, 57, vertical],[piece2_1, 53, horizontal],[piece3_1, 99, horizontal],[piece2_1, 94, horizontal]], 0, 7], [_,[[piece6_2, 12, horizontal],[piece4_2, 23, horizontal],[piece1_2, 30, vertical],[piece4_2, 33, horizontal],[piece1_2, 39, vertical],[piece1_2, 43, horizontal],[piece2_2, 56, horizontal],[piece1_2, 60, vertical],[piece2_2, 76, horizontal],[piece2_2, 80, horizontal],[piece3_2, 94, vertical],[piece3_2, 95, vertical],[piece2_2, 96, horizontal]],5,7],Board]) :- 
-	test_board2(_, Board).
+	test_board3(_, Board).
 
 % game_loop(+State)
 % check switching phases
@@ -166,41 +166,45 @@ get_new_state([1, [PlacementPhasePiecesDark, PlacedPiecesDark, _, _], [Placement
 	append([[PlayedPiece, Square, Direction]], PlacedPiecesLight, NewPlayedPiecesList),
 	\+ canPlaceAPiece(NewBoard, PlacementPhasePiecesDark).
 
-get_new_state([2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], Board], PlayedPiece, Square, Direction, NewBoard, [3, [PlacementPhasePiecesDark, NewList, NewScore, NewPieceRemovedLength], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], NewBoard]) :-
+get_new_state([2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], Board], PlayedPiece, Square, Direction, NewBoard, [3, [PlacementPhasePiecesDark, NewList, NewScore, NewPieceRemovedLength], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], UpdatedBoard]) :-
 	delete_element_from_list([PlayedPiece, Square, Direction], PlacedPiecesDark, NewList),
 	NumScoreCounters is 0, % temporario
 	calculate_pos_to_pos(dark_player, Square, WhiteSquare),
 	get_number_pieces(Direction, WhiteSquare, NewBoard, NewList, PlacedPiecesLight, NumPieces),
 	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
 	NewScore is ScoreDark + ScoreToAdd,
+	updateScoreCounter(ScoreLight, NewScore, NewBoard, UpdatedBoard),
 	piece_info(NewPieceRemovedLength, _, _, _, PlayedPiece),
 	\+ cannot_play(light_player, [3, [PlacementPhasePiecesDark, NewList, NewScore, NewPieceRemovedLength], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], NewBoard]).
 
-get_new_state([2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], Board], PlayedPiece, Square, Direction, NewBoard, [2, [PlacementPhasePiecesDark, NewList, NewScore, NewPieceRemovedLength], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], NewBoard]) :-
+get_new_state([2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], Board], PlayedPiece, Square, Direction, NewBoard, [2, [PlacementPhasePiecesDark, NewList, NewScore, NewPieceRemovedLength], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], UpdatedBoard]) :-
 	delete_element_from_list([PlayedPiece, Square, Direction], PlacedPiecesDark, NewList),
 	NumScoreCounters is 0, % temporario
 	calculate_pos_to_pos(dark_player, Square, WhiteSquare),
 	get_number_pieces(Direction, WhiteSquare, NewBoard, NewList, PlacedPiecesLight, NumPieces),
 	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
 	NewScore is ScoreDark + ScoreToAdd,
+	updateScoreCounter(ScoreLight, NewScore, NewBoard, UpdatedBoard),
 	piece_info(NewPieceRemovedLength, _, _, _, PlayedPiece),
 	cannot_play(light_player, [3, [PlacementPhasePiecesDark, NewList, NewScore, NewPieceRemovedLength], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLenghtLight], NewBoard]).
 
-get_new_state([3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], PlayedPiece, Square, Direction, NewBoard, [2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, NewScore, NewPieceRemovedLength], NewBoard]) :-
+get_new_state([3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], PlayedPiece, Square, Direction, NewBoard, [2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, NewScore, NewPieceRemovedLength], UpdatedBoard]) :-
 	delete_element_from_list([PlayedPiece, Square, Direction], PlacedPiecesLight, NewList),
 	NumScoreCounters is 0, % temporario
 	get_number_pieces(Direction, Square, NewBoard, PlacedPiecesDark, NewList, NumPieces),
 	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
 	NewScore is ScoreLight + ScoreToAdd,
+	updateScoreCounter(NewScore, ScoreDark, NewBoard, UpdatedBoard),
 	piece_info(NewPieceRemovedLength, _, _, _, PlayedPiece),
 	\+ cannot_play(dark_player, [2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, NewScore, NewPieceRemovedLength], NewBoard]).
 
-get_new_state([3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], PlayedPiece, Square, Direction, NewBoard, [3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, NewScore, NewPieceRemovedLength], NewBoard]) :-
+get_new_state([3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], PlayedPiece, Square, Direction, NewBoard, [3, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, NewScore, NewPieceRemovedLength], UpdatedBoard]) :-
 	delete_element_from_list([PlayedPiece, Square, Direction], PlacedPiecesLight, NewList),
 	NumScoreCounters is 0, % temporario
 	get_number_pieces(Direction, Square, NewBoard, PlacedPiecesDark, NewList, NumPieces),
 	calculateScoreUponRemoval(PlayedPiece, NumPieces, NumScoreCounters, ScoreToAdd),
 	NewScore is ScoreLight + ScoreToAdd,
+	updateScoreCounter(NewScore, ScoreDark, NewBoard, UpdatedBoard),
 	piece_info(NewPieceRemovedLength, _, _, _, PlayedPiece),
 	cannot_play(dark_player, [2, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, NewList, NewScore, NewPieceRemovedLength], NewBoard]).
 
@@ -216,6 +220,8 @@ move([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemov
 	turn_phase(TurnNO, scoring_phase),
 	player_turn(PlayerName, TurnNO),
 	remove_piece(Board, Piece, Square, PlayerName, Direction, NewBoard),
+	write('DISPLAYING BOARD\n'),
+	display_board(NewBoard, 9 , 10),
 	get_new_state([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], Piece, Square, Direction, NewBoard, NewState).
 
 display_game([TurnNO,_,_,Board]) :-
@@ -283,5 +289,10 @@ retrieve_turn_from_state([TurnNO|_], TurnNO).
 
 % build_scoring_phase_state(+CurrentState, -NewState)
 % build the new state after placement phase ends
-build_scoring_phase_state([0, Player1Info, LightPlayerInfo, Board], [3, Player1Info, LightPlayerInfo, Board]).
-build_scoring_phase_state([1, Player1Info, LightPlayerInfo, Board], [2, Player1Info, LightPlayerInfo, Board]).
+build_scoring_phase_state([0, Player1Info, LightPlayerInfo, Board], [3, Player1Info, LightPlayerInfo, FinalBoard]) :-
+	placeScoreCounterLightInitial(Board, NewBoard),
+	placeScoreCounterDarkInitial(NewBoard, FinalBoard).
+
+build_scoring_phase_state([1, Player1Info, LightPlayerInfo, Board], [2, Player1Info, LightPlayerInfo, FinalBoard]) :-
+	placeScoreCounterLightInitial(Board, NewBoard),
+	placeScoreCounterDarkInitial(NewBoard, FinalBoard).
