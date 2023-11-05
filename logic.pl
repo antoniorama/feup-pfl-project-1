@@ -368,3 +368,34 @@ test_findScoreCountersPositions:-
     test_board3(_, Board),
     findScoreCountersPositions(Board, 0, _, _, LightPos, DarkPos),
     format('Light Position: ~w, Dark Position: ~w', [LightPos, DarkPos]).
+
+rewritePieceInBoard(Board, Pos, NewBoard):-
+    PlacementRow is 9 - Pos // 10,
+    PlacementCol is Pos mod 10,
+    Row is Pos // 10,
+    format('Row: ~w\n', [Row]),
+    Col is Pos mod 10,
+    format('Col: ~w\n', [Col]),
+    nth0(PlacementRow, Board, BoardRow),
+    nth0(PlacementCol, BoardRow, Element),
+    withOrWithoutCounter(Element, ElementWithoutScoreCounter),
+    place_in_matrix(Board, PlacementRow, PlacementCol, ElementWithoutScoreCounter, NewBoard).
+
+test_printBoard:-
+    test_board3(_, Board),
+    display_header_coords(10, 10),
+    display_board(Board, 9, 10),
+    display_footer_coords(10, 10).
+
+test_rewritePieceInBoard:-
+    test_board3(_, Board),
+    rewritePieceInBoard(Board, 70, NewBoard),
+    display_header_coords(10, 10),
+    display_board(NewBoard, 9, 10),
+    display_footer_coords(10, 10).
+
+test_accessBoardRow:-
+    test_board3(_, Board),
+    nth0(2, Board, BoardRow),
+    nth0(0, BoardRow, Element),
+    format('Element: ~w\n', [Element]).

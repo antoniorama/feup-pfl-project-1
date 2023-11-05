@@ -44,9 +44,9 @@ test_board2(10, [
 ]).
 
 test_board3(10, [
-	[d3S, d3_, d3_, d3_, none, d2s, none, d2_, d2_, none],
+	[none, d3_, d3_, d3_, none, none, none, d2_, d2_, none],
 	[l1_, d2_, l6_, l6_, l6_, l6_, l6_, l6_, l6_, l1_],
-	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],
+	[l3S, none, d1_, l4_, l4_, l2s, l4_, l4_, l4_, l1_],
 	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],
 	[l1_, none, d1_, l1_, l1_, l1_, d2_, d2_, d2_, d2_],
 	[l1_, none, none, none, l3_, l3_, l2_, l2_, l2_, l2_],
