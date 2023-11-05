@@ -5,15 +5,16 @@
 
 % start_game initiates the game loop with an initial game state
 play :-
-		game_mode(Mode),
-    initial_state(Mode, State),
-		% test_placement_phase_state(State), % just to test
+		% game_mode(Mode),
+    % initial_state(Mode, State),
+		test_placement_phase_state(State), % just to test
     game_loop(State).
 
 % game_mode(-Mode)
 game_mode(Mode) :-
 	write('1) Player vs Player\n'),
 	write('2) Bot Lvl 1 vs Bot Lvl 1\n'),
+	write('3) Player vs Bot Lvl 1\n'),
 	write('Choose game mode: '),
 	read_number(Mode).
 
@@ -34,13 +35,21 @@ initial_state(2, [0, [dark_bot1, PlacementPhasePiecesDark, [], 0, 0], [light_bot
 	initial_light_pieces(InitialLightPieces),
 	append(InitialLightPieces, [], PlacementPhasePiecesLight).
 
+% player vs bot lvl 1
+initial_state(3, [0, [dark_bot1, PlacementPhasePiecesDark, [], 0, 0], [light_player, PlacementPhasePiecesLight, [], 0, 0], Board]) :-
+	board(_, Board),
+	initial_dark_pieces(InitialDarkPieces),
+	append(InitialDarkPieces, [], PlacementPhasePiecesDark),
+	initial_light_pieces(InitialLightPieces),
+	append(InitialLightPieces, [], PlacementPhasePiecesLight).
+
 initial_state(_, _) :-
 	write('\nChoose a valid game mode. \n'),
 	play.
 
 % just a state to test placement phase
-test_placement_phase_state([3, [_, [dark_player,[piece2_1, 09, horizontal],[piece1_1, 29, horizontal],[piece1_1, 13, horizontal],[piece1_1, 38, horizontal],[piece2_1, 33, horizontal],[piece1_1, 57, vertical],[piece2_1, 53, horizontal],[piece3_1, 99, horizontal],[piece2_1, 94, horizontal]], 0, 7], [_,[light_player,[piece6_2, 12, horizontal],[piece4_2, 23, horizontal],[piece1_2, 30, vertical],[piece4_2, 33, horizontal],[piece1_2, 39, vertical],[piece1_2, 43, horizontal],[piece2_2, 56, horizontal],[piece1_2, 60, vertical],[piece2_2, 76, horizontal],[piece2_2, 80, horizontal],[piece3_2, 94, vertical],[piece3_2, 95, vertical],[piece2_2, 96, horizontal]],5,7],Board]) :- 
-	test_board3(_, Board).
+test_placement_phase_state([3, [dark_player, _, [[piece2_1, 09, horizontal],[piece1_1, 29, horizontal],[piece1_1, 13, horizontal],[piece1_1, 38, horizontal],[piece2_1, 33, horizontal],[piece1_1, 57, vertical],[piece2_1, 53, horizontal],[piece3_1, 99, horizontal],[piece2_1, 94, horizontal]], 0, 7], [light_player,_,[[piece6_2, 12, horizontal],[piece4_2, 23, horizontal],[piece1_2, 30, vertical],[piece4_2, 33, horizontal],[piece1_2, 39, vertical],[piece1_2, 43, horizontal],[piece2_2, 56, horizontal],[piece1_2, 60, vertical],[piece2_2, 76, horizontal],[piece2_2, 80, horizontal],[piece3_2, 94, vertical],[piece3_2, 95, vertical],[piece2_2, 96, horizontal]],5,7],Board]) :- 
+	board(_, Board).
 
 % game_loop(+State)
 % check switching phases
@@ -50,7 +59,6 @@ game_loop(State) :-
 	next_phase(State), !, 
 	write('Placement phase ends'), nl,
 	display_game(State),
-	game_loop(State).
 	build_scoring_phase_state(State, NewState),
 	game_loop(NewState).
 
@@ -64,6 +72,7 @@ game_loop(State) :-
 % main game loop
 game_loop(State) :-
     % Display the current state of the game
+		print_list(State),
     display_game(State),
     
 		repeat,
@@ -164,13 +173,7 @@ choose_move([TurnNO, DarkPlayerInfo, LightPlayerInfo, Board], _, 1, [RandomPiece
 	random(0, 100, RandomSquare),
 	get_placement_pieces_from_state([TurnNO, DarkPlayerInfo, LightPlayerInfo, Board], PieceList),
 	get_random_piece(PieceList, RandomPiece),
-	get_random_direction(RandomDirection),
-	write('a1'),
-	print_list(PieceList),
-	write('a2'),
-	format('TRYING MOVE : ~w ~w ~w \n', [RandomSquare, RandomDirection, RandomPiece]).
-	%canBePlayed(Board, RandomSquare, RandomDirection, RandomPiece),
-	% format('FOUND MOVE : ~w ~w ~w \n', [RandomSquare, RandomDirection, RandomPiece]).
+	get_random_direction(RandomDirection).
 
 % get_random_piece(+PieceList,- RandomPiece)
 % gets a random piece from a piece list
@@ -279,6 +282,7 @@ move([TurnNO, DarkPlayerInfo, LightPlayerInfo, Board], [Piece, Square, Direction
 	get_new_state([TurnNO, DarkPlayerInfo, LightPlayerInfo, _], Piece, Square, Direction, NewBoard, NewState).
 
 move([TurnNO, [PlayerNameDark, PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlayerNameLight, PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], [Piece, Square, Direction], NewState) :-
+	\+ pieceHasScoreCounter(Board, Piece, Square, Direciton),
 	turn_phase(TurnNO, scoring_phase),
 	player_turn(PlayerName, TurnNO),
 	remove_piece(Board, Piece, Square, PlayerName, Direction, NewBoard),
