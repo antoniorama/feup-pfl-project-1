@@ -15,10 +15,9 @@
 2. Download the game files.
 3. Navigate to the game directory.
    - `cd path/to/game`
-4. Start SICStus Prolog with the game file.
-   - `sicstus -l main.pl`
+4. Start SICStus Prolog with the main.pl file.
 5. Run the game.
-   - `play`
+   - `play.`
 
 ### Windows
 
@@ -29,7 +28,7 @@
 4. Start SICStus Prolog with the game file.
    - `consult('path/to/main.pl').`
 5. Run the game.
-   - `play`
+   - `play.`
 
 ## Description of the Game
 
