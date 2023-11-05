@@ -33,7 +33,7 @@ isOutOfBounds(StartPos, EndPos, vertical):-
     EndPos >= 0.
 
 % Checks if there is already a piece in those positions. use length. if start coordinates and end coordinates are diagonal it doesn't allow either
-% canBePlayed(+Board, +StartPos, +View, +Direction, +Piece)
+% canBePlayed(+Board, +StartPos, +Direction, +Piece)
 canBePlayed(Board, StartPos, Direction, Piece) :-
     % \+is_none(Board, StartPos),
     calculateEndPos(StartPos, Direction, Piece, EndPos),
@@ -97,9 +97,13 @@ can_place_piece_test :-
 place_piece(Board, StartPos, Direction, Player, Piece, NewBoard):-
     calculate_position(Player, StartPos, StartX, StartY),
     calculate_pos_to_pos(Player, StartPos, NewPos),
+    format('PLAYER~w \n', [Player]),
     canBePlayed(Board, NewPos, Direction, Piece),
+    write('a2\n'),
     piece_info(NSquares, _, _, Player, Piece),
+    write('a3\n'),
     piece_default_square(Piece, DefaultSquare),
+    write('a4\n'),
     format("Square Display: ~w  NSquares: ~d  StartX: ~d  StartY: ~d \n" ,[DefaultSquare, NSquares, StartX, StartY]),
     place_direction(Board, DefaultSquare, StartX, StartY, NSquares, NewBoard, Direction).
 
@@ -403,39 +407,6 @@ test_accessBoardRow:-
     nth0(0, BoardRow, Element),
     format('Element: ~w\n', [Element]).
 
-%predicate that positions the score counters in the bottom left corner and top right corner
-%if there is already a piece in the square ex l1_, replace it by l1s or l1S, depending on the color s or S of the score counter.
-%placeScoreCounterLightInitial(+Board, -NewBoard)
-placeScoreCounterLightInitial(Board, NewBoard):-
-    element_at(Board, 0, none),
-    place_in_matrix(Board, 0, 0, slight, NewBoard).
-
-placeScoreCounterLightInitial(Board, NewBoard):-
-    element_at(Board, 0, Element),
-    format('Element: ~w\n', [Element]),
-    withOrWithoutCounterLight(ElementWithScoreCounter, Element),
-    format('ElementWithScoreCounter: ~w\n', [ElementWithScoreCounter]),
-    place_in_matrix(Board, 0, 0, ElementWithScoreCounter, NewBoard).
-
-placeScoreCounterDarkInitial(Board, NewBoard):-
-    element_at(Board, 99, none),
-    place_in_matrix(Board, 9, 9, sdark, NewBoard).
-
-placeScoreCounterDarkInitial(Board, NewBoard):-
-    element_at(Board, 99, Element),
-    format('Element: ~w\n', [Element]),
-    withOrWithoutCounterDark(ElementWithScoreCounter, Element),
-    format('ElementWithScoreCounter: ~w\n', [ElementWithScoreCounter]),
-    place_in_matrix(Board, 9, 9, ElementWithScoreCounter, NewBoard).
-
-test_placeSC:-
-    test_board3(_, Board),
-    placeScoreCounterDarkInitial(Board, IntermediateBoard),
-    placeScoreCounterLightInitial(IntermediateBoard, NewBoard),
-    display_header_coords(10, 10),
-    display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
-    display_footer_coords(10, 10).
-
 %predicate that positions the score counters in the requested position
 %placeScoreCounterLight(+Board, +Pos, -NewBoard)
 placeScoreCounterLight(Board, Pos, NewBoard):-
@@ -471,8 +442,8 @@ placeScoreCounterDark(Board, Pos, NewBoard):-
 
 test_placeSC2:-
     test_board3(_, Board),
-    placeScoreCounterLight(Board, 10, IntermediateBoard), % Apply the light counter
-    placeScoreCounterDark(IntermediateBoard, 53, NewBoard),
+    placeScoreCounterLight(Board, 0, IntermediateBoard), % Apply the light counter
+    placeScoreCounterDark(IntermediateBoard, 99, NewBoard),
     display_header_coords(10, 10),
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
@@ -499,7 +470,7 @@ test_updateScoreCounter:-
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
 
-
+/*
 %The minimax algorithm should be used in the scoring phase. Players would aim to maximize their scores while minimizing the potential scoring of the opponent.
 % Base case of recursion: if the game is over, evaluate the utility of the board
 % minimax(+Position, +Depth, +Player, -Utility, -Move)
@@ -578,3 +549,4 @@ choose_move(GameState, Player, 2, Move) :-
     % For Level 2, use the minimax algorithm to select the best move
     determine_depth(Level, Depth), % You need to define how you determine the depth based on level or other factors
     minimax(GameState, Depth, Player, Utility-Move).
+*/
