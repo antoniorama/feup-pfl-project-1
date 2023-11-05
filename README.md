@@ -304,7 +304,7 @@ In the context of our Prolog-based game, the `choose_move/4` predicate operates 
 Through the implementation of the Minimax algorithm within the `choose_move/4` predicate, the Level 2 bot is able to play "intelligently" by considering not only immediate gains but also future implications of its moves. This predictive capability, paired with the recursive nature of the Minimax algorithm, allows the bot to select moves that increase its chances of winning against an opponent playing at its best potential.
 
 ## Important Considerations
-
+In the design of our system, particular attention has been paid to user experience and interface fluidity. A significant enhancement is the introduction of the read_number predicate. This predicate streamlines numerical input by alleviating the need for users to append a period after entering a number. This adjustment not only aligns with conventional data entry practices found in non-Prolog environments but also mitigates potential input errors.
 
 ## Conclusions
 
