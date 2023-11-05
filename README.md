@@ -55,7 +55,7 @@ If any player cannot remove any of his tiles on his turn, he passes and is out o
 
 ### Game State Visualization
 
-#### display_game/2
+#### display_game/2:
 The `display_game/2` predicate serves as a key component in visualizing the game state in a textual form for the player. This predicate takes a single argument, which is a list containing the current turn number (TurnNO) and the current state of the game board (Board). The game board is represented as a list of lists, with each sublist representing a row on the board.
 
 The predicate is implemented as a sequence of calls to other predicates, each responsible for displaying different parts of the game interface. Below is an overview of how display_game/2 operates:
@@ -95,7 +95,7 @@ display_game([TurnNO,_,_,Board]) :-
 	display_turn(TurnNO), nl.
 ```
 
-#### initial_state/1
+#### initial_state/1:
 The initial_state/1 predicate is responsible for setting up the game's initial state. It is critical in establishing the starting point of the game. This predicate is designed to be called without an argument and will unify its single argument with the initial state of the game. Here's an overview of its implementation:
 
 Turn Initialization: The game starts with the dark_player's turn, denoted by 0. This convention is part of the first element of the list that represents the game state.
