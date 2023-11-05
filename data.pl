@@ -44,7 +44,7 @@ test_board2(10, [
 ]).
 
 test_board3(10, [
-	[d3S, d3_, d3_, d3_, sdark, d2s, none, d2_, d2_, slight],
+	[d3S, d3_, d3_, d3_, none, d2s, none, d2_, d2_, none],
 	[l1_, d2_, l6_, l6_, l6_, l6_, l6_, l6_, l6_, l1_],
 	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],
 	[l1_, none, d1_, l4_, l4_, l4_, l4_, l4_, l4_, l1_],

@@ -337,4 +337,30 @@ test_countScoreCountersInRow:-
      format('Final Score Counter: ~w', [FinalScoreCounter]).
 
 
- 
+printEveryElementOfTheBoard(Board, Pos, LightPos, DarkPos, FinalLightPos, FinalDarkPos):-
+    element_at(Board, Pos, Element),
+    square_info(_, _, none, Element),
+    format('~w ', [Element]),
+    NewPos is Pos + 1,
+    printEveryElementOfTheBoard(Board, NewPos, LightPos, DarkPos, FinalLightPos, FinalDarkPos).
+
+printEveryElementOfTheBoard(Board, Pos, _, DarkPos, FinalLightPos, FinalDarkPos):-
+    element_at(Board, Pos, Element),
+    square_info(_, _, sc_light, Element),
+    format('~w ', [Element]),
+    NewPos is Pos + 1,
+    printEveryElementOfTheBoard(Board, NewPos, Pos, DarkPos, FinalLightPos, FinalDarkPos).
+
+printEveryElementOfTheBoard(Board, Pos, LightPos, _, FinalLightPos, FinalDarkPos):-
+    element_at(Board, Pos, Element),
+    square_info(_, _, sc_dark, Element),
+    format('~w ', [Element]),
+    NewPos is Pos + 1,
+    printEveryElementOfTheBoard(Board, NewPos, LightPos, Pos, FinalLightPos, FinalDarkPos).
+
+printEveryElementOfTheBoard(_, 100, LightPos, DarkPos, LightPos, DarkPos):- !.
+
+test_printEveryElementOfTheBoard:-
+    test_board3(_, Board),
+    printEveryElementOfTheBoard(Board, 0, _, _, LightPos, DarkPos),
+    format('Light Position: ~w, Dark Position: ~w', [LightPos, DarkPos]).
