@@ -269,7 +269,7 @@ game_over(State, Winner) :-
 #### Level 1 Bot
 We developed a **Level 1** bot that plays **random moves**. It is only working for the placement phase.
 
-It chooses a move in the **choose_move/4** rule. It picks a random Piece from the PlacementPieceList of the respective player and tries placing it in a random square in a random position. If it can do it, then it plays it, if it can't, then it picks another Move and tries with that one. 
+It chooses a move in the **choose_move/4** (choose_move(+GameState, +Player, +Level, -Move)) rule. It picks a random Piece from the PlacementPieceList of the respective player and tries placing it in a random square in a random position. If it can do it, then it plays it, if it can't, then it picks another Move and tries with that one. 
 
 This bot is not implemented for the scoring phase. However, it could simply choose a random piece to remove from the board.
 
