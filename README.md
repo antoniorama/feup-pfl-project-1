@@ -12,8 +12,7 @@
 
 1. Ensure that SICStus Prolog 4.8 is installed on your system.
 
-2. Clone the repository or download the game files.
-   - `git clone <repository-url>` or similar command.
+2. Download the game files.
 3. Navigate to the game directory.
    - `cd path/to/game`
 4. Start SICStus Prolog with the game file.
@@ -25,8 +24,7 @@
 
 1. Ensure that SICStus Prolog 4.8 is installed on your system.
 
-2. Clone the repository or download the game files.
-   - Instructions on how to clone/download.
+2. Download the game files.
 3. Navigate to the game directory in Command Prompt.
 4. Start SICStus Prolog with the game file.
    - `consult('path/to/main.pl').`
