@@ -557,3 +557,15 @@ switch_player(minimizer, maximizer).
 % valid_moves(Position, Player, Moves) - Generates a list of valid moves for the player.
 % move(Position, Move, NewPosition) - Applies a move to a position.
 % evaluate(Position, Player, Utility) - Evaluates the position for a player.
+
+% choose_move(+GameState, +Player, +Level, -Move)
+choose_move(GameState, Player, 1, Move) :-
+    % For Level 1, select a random move
+    valid_moves(GameState, Player, Moves),
+    random_member(Move, Moves).
+
+choose_move(GameState, Player, 2, Move) :-
+    % For Level 2, use the minimax algorithm to select the best move
+    determine_depth(Level, Depth), % You need to define how you determine the depth based on level or other factors
+    minimax(GameState, Depth, Player, Utility-Move),
+    !. % Cut to prevent backtracking once the best move is found
