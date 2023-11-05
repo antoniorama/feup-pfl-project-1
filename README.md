@@ -128,8 +128,6 @@ initial_state([0, [PlacementPhasePiecesDark, [], 0, 0], [PlacementPhasePiecesLig
 The `move/3` predicate is a key component of the game's logic that processes and applies a player's move to the game state. It takes the current state and the player's move as input and produces a new game state that reflects the changes after the move.
 
 Predicate Definition:
-prolog
-Copy code
 move(+State, +Move, -NewState)
 +State: The current game state before the move.
 +Move: The player's move.
@@ -183,6 +181,37 @@ move([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemov
 ### End of Game
 
 [Explain the predicate `game_over/2` for checking the end of the game and determining the winner.]
+
+#### game_over/2:
+
+Predicate Definition:
+
+game_over(+State, -Winner)
++State: The current state of the game, including players' scores and pieces.
+-Winner: The outcome of the game, identifying the winner or a draw.
+Implementation Overview:
+The predicate game_over/2 is implemented with two distinct conditions for the game to be over:
+
+Victory by Score:
+
+The predicate first checks if either player has reached a score of 100 or more, which is a winning condition in this game.
+For the dark player, the check is performed with ScoreDark >= 100. If this condition is true, dark_player is unified with the Winner output variable.
+Similarly, for the light player, ScoreLight >= 100 must be true to unify light_player with the Winner.
+
+Inability to Play:
+
+If neither player has reached the winning score, the game checks if both players are unable to make a legal move.
+This is determined by the helper predicates cannot_play/2, which takes a player and the current state as arguments.
+If both cannot_play(dark_player, State) and cannot_play(light_player, State) succeed, it indicates that neither player can perform a valid move, signaling the end of the game.
+The get_winner/2 predicate is then called to determine the winner based on the current state. This could involve comparing scores or applying other tie-breaking rules.
+Handling Game Conclusion:
+The game_over/2 predicate does not directly modify the game state but rather inspects it to determine if end conditions are met. The definition implies the following logic for game termination:
+
+Victory Condition: A player is declared the winner if their score reaches or exceeds the predetermined threshold (e.g., 100 points).
+Draw Condition: The game ends in a draw if both players are unable to make a valid move. The actual winner in this scenario, or the logic to handle a draw, would depend on the implementation of get_winner/2.
+Summary:
+The game_over/2 predicate is critical for monitoring the end conditions of the game. By evaluating the players' scores and their ability to continue playing, it maintains the integrity of the game's conclusion. The modularity of this predicate, with reliance on cannot_play/2 and get_winner/2, also promotes a clean separation of concerns within the game's logic.
+
 ```prolog
 % game_over(+State, -Winner)
 % over by score
