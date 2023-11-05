@@ -409,7 +409,7 @@ test_accessBoardRow:-
 placeScoreCounterLightInitial(Board, NewBoard):-
     element_at(Board, 0, none),
     place_in_matrix(Board, 0, 0, slight, NewBoard).
-    
+
 placeScoreCounterLightInitial(Board, NewBoard):-
     element_at(Board, 0, Element),
     format('Element: ~w\n', [Element]),
@@ -417,12 +417,11 @@ placeScoreCounterLightInitial(Board, NewBoard):-
     format('ElementWithScoreCounter: ~w\n', [ElementWithScoreCounter]),
     place_in_matrix(Board, 0, 0, ElementWithScoreCounter, NewBoard).
 
-%placeScoreCounterDarkInitial(+Board, -NewBoard)
 placeScoreCounterDarkInitial(Board, NewBoard):-
     element_at(Board, 99, none),
     place_in_matrix(Board, 9, 9, sdark, NewBoard).
 
-placeScoreCounterDarkInitial(Board, Pos, NewBoard):-
+placeScoreCounterDarkInitial(Board, NewBoard):-
     element_at(Board, 99, Element),
     format('Element: ~w\n', [Element]),
     withOrWithoutCounterDark(ElementWithScoreCounter, Element),
@@ -431,12 +430,11 @@ placeScoreCounterDarkInitial(Board, Pos, NewBoard):-
 
 test_placeSC:-
     test_board3(_, Board),
-    placeScoreCounterLightInitial(Board, IntermediateBoard), % Apply the light counter
-    placeScoreCounterDarkInitial(IntermediateBoard, NewBoard), % Then apply the dark counter with the result from the first call
+    placeScoreCounterDarkInitial(Board, IntermediateBoard),
+    placeScoreCounterLightInitial(IntermediateBoard, NewBoard),
     display_header_coords(10, 10),
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
-
 %predicate that positions the score counters in the requested position
 %placeScoreCounterLight(+Board, +Pos, -NewBoard)
 placeScoreCounterLight(Board, Pos, NewBoard):-
