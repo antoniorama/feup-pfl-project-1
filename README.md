@@ -306,6 +306,7 @@ Through the implementation of the Minimax algorithm within the `choose_move/4` p
 ## Important Considerations
 In the design of our system, particular attention has been paid to user experience and interface fluidity. A significant enhancement is the introduction of the read_number predicate. This predicate streamlines numerical input by alleviating the need for users to append a period after entering a number. This adjustment not only aligns with conventional data entry practices found in non-Prolog environments but also mitigates potential input errors.
 
+While the predicates related to the score counter have been defined and individually tested, they do not yet function seamlessly when integrated into the game loop. However, each predicate operates correctly in isolation. To aid in the modular assessment of these predicates, test predicates have been implemented in the logic.pl file.
 ## Conclusions
 
 The development of this game was a multifaceted challenge that required the team to delve into complex logic structures and interactive design using Prolog, which is not commonly employed for game development. Successfully implementing the game's rules in a logical and user-friendly manner represents a significant accomplishment for our group.
