@@ -325,11 +325,13 @@ In conclusion, this project not only provided a hands-on experience with Prolog 
 
 ## Game Execution Images
 
-(![Initial game state](https://github.com/antoniorama/pfl/assets/93871576/60b667e9-1c19-454d-a1b4-34000519ba58))
+![Initial game state](https://github.com/antoniorama/pfl/assets/93871576/60b667e9-1c19-454d-a1b4-34000519ba58)
+
 *Initial game state.*
 
-![Intermediate Game State](path/to/intermediate_state_image.png)
-*Intermediate game state.*
+![Intermediate game state - Placement Phase](https://github.com/antoniorama/pfl/assets/93871576/14b25422-8c6b-4656-bc0b-29e13cb6c0b3)
+
+*Intermediate game state - Placement Phase.*
 
 ![Final Game State](path/to/final_state_image.png)
 *Final game state.*
