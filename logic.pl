@@ -500,6 +500,7 @@ test_updateScoreCounter:-
     display_footer_coords(10, 10).
 
 
+%The minimax algorithm should be used in the scoring phase. Players would aim to maximize their scores while minimizing the potential scoring of the opponent.
 % Base case of recursion: if the game is over, evaluate the utility of the board
 % minimax(+Position, +Depth, +Player, -Utility, -Move)
 minimax(Position, _, Player, Utility, []) :-
