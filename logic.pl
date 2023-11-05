@@ -336,7 +336,8 @@ test_countScoreCountersInRow:-
      countScoreCountersInRow(0, Board, FinalScoreCounter),
      format('Final Score Counter: ~w', [FinalScoreCounter]).
 
-
+%finds the position of the score counters in the board
+%findScoreCountersPositions(+Board, +Pos, -LightPos, -DarkPos, -FinalLightPos, -FinalDarkPos)
 findScoreCountersPositions(Board, Pos, LightPos, DarkPos, FinalLightPos, FinalDarkPos):-
     element_at(Board, Pos, Element),
     square_info(_, _, none, Element),
@@ -369,6 +370,8 @@ test_findScoreCountersPositions:-
     findScoreCountersPositions(Board, 0, _, _, LightPos, DarkPos),
     format('Light Position: ~w, Dark Position: ~w', [LightPos, DarkPos]).
 
+%replaces the piece with the score counter on top by the piece without the score counter
+%replacePieceWithScoreCounter(+Board, +Pos, -NewBoard)
 rewritePieceInBoard(Board, Pos, NewBoard):-
     PlacementRow is 9 - Pos // 10,
     PlacementCol is Pos mod 10,
@@ -402,17 +405,19 @@ test_accessBoardRow:-
 
 %predicate that positions the score counters in the bottom left corner and top right corner
 %if there is already a piece in the square ex l1_, replace it by l1s or l1S, depending on the color s or S of the score counter.
+%placeScoreCounterLightInitial(+Board, -NewBoard)
 placeScoreCounterLightInitial(Board, NewBoard):-
     element_at(Board, 0, none),
     place_in_matrix(Board, 0, 0, slight, NewBoard).
     
-placeScoreCounterDarkInitial(Board, NewBoard):-
+placeScoreCounterLightInitial(Board, NewBoard):-
     element_at(Board, 0, Element),
     format('Element: ~w\n', [Element]),
     withOrWithoutCounter(ElementWithScoreCounter, Element),
     format('ElementWithScoreCounter: ~w\n', [ElementWithScoreCounter]),
     place_in_matrix(Board, 0, 0, ElementWithScoreCounter, NewBoard).
 
+%placeScoreCounterDarkInitial(+Board, -NewBoard)
 placeScoreCounterDarkInitial(Board, NewBoard):-
     element_at(Board, 99, none),
     place_in_matrix(Board, 9, 9, sdark, NewBoard).
@@ -432,7 +437,8 @@ test_placeSC:-
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
 
-
+%predicate that positions the score counters in the requested position
+%placeScoreCounterLight(+Board, +Pos, -NewBoard)
 placeScoreCounterLight(Board, Pos, NewBoard):-
     element_at(Board, Pos, none),
     Row is Pos // 10,
@@ -471,3 +477,7 @@ test_placeSC2:-
     display_header_coords(10, 10),
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
+
+
+%predicate that updates Score Counter's position on the board based on the score of the player
+%updateScoreCounter(+ScoreLight, +ScoreDark, +Board,  -NewBoard)
