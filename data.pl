@@ -101,30 +101,30 @@ square_info(_, _, _, none).
 
 %withOrWithoutCounter(?PieceWithCounter, ?PieceWithoutCounter).
 
-withOrWithoutCounter(d1s, d1_).
-withOrWithoutCounter(d1S, d1_).
-withOrWithoutCounter(d2s, d2_).
-withOrWithoutCounter(d2S, d2_).
-withOrWithoutCounter(d3s, d3_).
-withOrWithoutCounter(d3S, d3_).
-withOrWithoutCounter(d4s, d4_).
-withOrWithoutCounter(d4S, d4_).
-withOrWithoutCounter(d6s, d6_).
-withOrWithoutCounter(d6S, d6_).
+withOrWithoutCounterLight(d1s, d1_).
+withOrWithoutCounterDark(d1S, d1_).
+withOrWithoutCounterLight(d2s, d2_).
+withOrWithoutCounterDark(d2S, d2_).
+withOrWithoutCounterLight(d3s, d3_).
+withOrWithoutCounterDark(d3S, d3_).
+withOrWithoutCounterLight(d4s, d4_).
+withOrWithoutCounterDark(d4S, d4_).
+withOrWithoutCounterLight(d6s, d6_).
+withOrWithoutCounterDark(d6S, d6_).
 
-withOrWithoutCounter(l1s, l1_).
-withOrWithoutCounter(l1S, l1_).
-withOrWithoutCounter(l2s, l2_).
-withOrWithoutCounter(l2S, l2_).
-withOrWithoutCounter(l3s, l3_).
-withOrWithoutCounter(l3S, l3_).
-withOrWithoutCounter(l4s, l4_).
-withOrWithoutCounter(l4S, l4_).
-withOrWithoutCounter(l6s, l6_).
-withOrWithoutCounter(l6S, l6_).
+withOrWithoutCounterLight(l1s, l1_).
+withOrWithoutCounterDark(l1S, l1_).
+withOrWithoutCounterLight(l2s, l2_).
+withOrWithoutCounterDark(l2S, l2_).
+withOrWithoutCounterLight(l3s, l3_).
+withOrWithoutCounterDark(l3S, l3_).
+withOrWithoutCounterLight(l4s, l4_).
+withOrWithoutCounterDark(l4S, l4_).
+withOrWithoutCounterLight(l6s, l6_).
+withOrWithoutCounterDark(l6S, l6_).
 
-withOrWithoutCounter(S, none).
-withOrWithoutCounter(s, none).
+withOrWithoutCounterDark(S, none).
+withOrWithoutCounterLight(s, none).
 
 % square_to_display(+Square, -Display)
 square_to_display(d1_, ' P1 ').
