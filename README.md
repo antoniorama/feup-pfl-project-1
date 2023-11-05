@@ -114,6 +114,35 @@ move([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemov
 ### Computer Plays
 
 [Describe how the computer selects a move using the `choose_move/4` predicate based on different levels of difficulty.]
+## Level 2 Bot
+
+The core of the Level 2 bot's decision-making process in our game is encapsulated in the `choose_move/4` predicate. This predicate, unlike the random selection method employed by the Level 1 bot, implements a strategic approach through the Minimax algorithm. The Minimax algorithm is a backtracking algorithm that is used in decision-making and game theory to find the optimal move for a player, assuming that the opponent is also playing optimally.
+
+In the context of our Prolog-based game, the `choose_move/4` predicate operates as follows when applied to the Level 2 bot:
+
+1. **Initial Function Call:**
+   The predicate is first called with the current state of the game, the bot's identifier, the depth of analysis, and an indicator of the bot's level of difficulty.
+
+2. **Tree Generation:**
+   Starting from the current game state, the predicate generates a game tree representing all possible future moves, up to a certain depth. Each node of the tree corresponds to a game state, which results from a possible move by either the bot or its opponent.
+
+3. **Minimax Algorithm:**
+   Once the tree is constructed, the Minimax algorithm is applied recursively. The algorithm traverses the tree, applying the following logic:
+   
+   - **Minimizer and Maximizer:** There are two kinds of nodes—minimizer (opponent) and maximizer (bot). The maximizer aims to maximize the score, while the minimizer tries to get the lowest score possible.
+   - **Base Case:** The recursion hits a base case when it reaches a terminal node (a win, loss, or draw) or when the specified depth limit is reached. In these cases, a heuristic value is returned, which is a measure of the desirability of that node (game state).
+   - **Recursive Case:** For non-terminal nodes, the algorithm recursively calls itself for all the children, alternating between minimizing and maximizing according to whose move it is.
+
+4. **Move Evaluation:**
+   Each move's potential is evaluated using a heuristic function that scores the game states. This heuristic takes into account various factors such as material count, positional advantages, and potential future moves. For the Level 2 bot, this evaluation must be sophisticated enough to provide a good approximation of the game state's utility.
+
+5. **Decision Making:**
+   After all possible moves have been evaluated, the algorithm chooses the move that leads to the outcome with the maximum score for the bot, while considering that the opponent is making the best possible counter moves. This is done by propagating the minimax values up the tree.
+
+6. **Final Move Selection:**
+   The `choose_move/4` predicate finally returns the move with the highest minimax value as the bot's selected action.
+
+Through the implementation of the Minimax algorithm within the `choose_move/4` predicate, the Level 2 bot is able to play "intelligently" by considering not only immediate gains but also future implications of its moves. This predictive capability, paired with the recursive nature of the Minimax algorithm, allows the bot to select moves that increase its chances of winning against an opponent playing at its best potential.
 
 ## Conclusions
 
