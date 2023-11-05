@@ -358,7 +358,7 @@ findScoreCountersPositions(Board, Pos, LightPos, _, FinalLightPos, FinalDarkPos)
 
 findScoreCountersPositions(_, 100, LightPos, DarkPos, ConvertedLightPos, ConvertedDarkPos):- 
     calculate_position(light_player, LightPos, LightRow, LightColumn),
-    calculate_position(_player, DarkPos, DarkRow, DarkColumn), 
+    calculate_position(dark_player, DarkPos, DarkRow, DarkColumn), 
     ConvertedLightRow is 90 - (LightRow * 10),
     ConvertedDarkRow is 90 - (DarkRow * 10),
     ConvertedLightPos is ConvertedLightRow + LightColumn,
@@ -435,6 +435,7 @@ test_placeSC:-
     display_header_coords(10, 10),
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
+
 %predicate that positions the score counters in the requested position
 %placeScoreCounterLight(+Board, +Pos, -NewBoard)
 placeScoreCounterLight(Board, Pos, NewBoard):-
@@ -497,3 +498,62 @@ test_updateScoreCounter:-
     display_header_coords(10, 10),
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
+
+
+% Base case of recursion: if the game is over, evaluate the utility of the board
+%minimax(+Position, +Depth, +Player, -Utility)
+minimax(Position, Depth, Player, Utility) :-
+    game_over(Position), !,
+    evaluate(Position, Player, Utility).
+
+% Recursive case: if the game is not over, and it is the maximizer's turn
+%minimax(+Position, +Depth, +Player, -Utility)
+minimax(Position, Depth, maximizer, Utility) :-
+    Depth > 0,
+    valid_moves(Position, maximizer, Moves), % Find all valid moves for the maximizer
+    NewDepth is Depth - 1,
+    find_best_move(Moves, NewDepth, maximizer, nil, Utility).
+
+% Recursive case: if the game is not over, and it is the minimizer's turn
+%minimax(+Position, +Depth, +Player, -Utility)
+minimax(Position, Depth, minimizer, Utility) :-
+    Depth > 0,
+    valid_moves(Position, minimizer, Moves), % Find all valid moves for the minimizer
+    NewDepth is Depth - 1,
+    find_best_move(Moves, NewDepth, minimizer, nil, Utility).
+
+% Evaluate a list of moves and find the best one, updating the best utility found so far
+%find_best_move(+Moves, +Depth, +Player, +CurrentBestUtility, -BestUtility)
+find_best_move([], _, _, BestUtility, BestUtility).
+find_best_move([Move|Moves], Depth, Player, CurrentBestUtility, BestUtility) :-
+    move(Position, Move, NewPosition), % Apply a move to the current position
+    switch_player(Player, NextPlayer), % Change the player
+    minimax(NewPosition, Depth, NextPlayer, Utility), % Recursive minimax to evaluate the move
+    update_best_utility(Utility, Move, Player, CurrentBestUtility, NewCurrentBestUtility),
+    find_best_move(Moves, Depth, Player, NewCurrentBestUtility, BestUtility).
+
+% Update the best utility found so far
+%update_best_utility(+Utility, +Move, +Player, +CurrentBestUtility, -NewBestUtility)
+update_best_utility(Utility, Move, maximizer, nil, Utility-Move).
+update_best_utility(Utility, Move, maximizer, CurrentBestUtility-BestMove, NewBestUtility-BestMove) :-
+    Utility > CurrentBestUtility,
+    NewBestUtility = Utility.
+update_best_utility(Utility, Move, maximizer, BestUtility-BestMove, BestUtility-BestMove) :-
+    Utility =< BestUtility.
+
+update_best_utility(Utility, Move, minimizer, nil, Utility-Move).
+update_best_utility(Utility, Move, minimizer, CurrentBestUtility-BestMove, NewBestUtility-BestMove) :-
+    Utility < CurrentBestUtility,
+    NewBestUtility = Utility.
+update_best_utility(Utility, Move, minimizer, BestUtility-BestMove, BestUtility-BestMove) :-
+    Utility >= BestUtility.
+
+% Switch player helper
+switch_player(maximizer, minimizer).
+switch_player(minimizer, maximizer).
+
+% Game-specific predicates that need to be defined:
+% game_over(Position) - Determines if the game is over.
+% valid_moves(Position, Player, Moves) - Generates a list of valid moves for the player.
+% move(Position, Move, NewPosition) - Applies a move to a position.
+% evaluate(Position, Player, Utility) - Evaluates the position for a player.
