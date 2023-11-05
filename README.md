@@ -85,7 +85,9 @@ If any player cannot remove any of his tiles on his turn, he passes and is out o
 
 ## Bibliography
 
-[List all the references and resources used during the development of the game.]
+- IG Game Center. (n.d.). _Main Page_. Retrieved November 1, 2023, from https://www.iggamecenter.com/
+- IG Game Center. (n.d.). _Isaac Game Rules_. Retrieved November 1, 2023, from https://www.iggamecenter.com/en/rules/isaac
+
 
 ## Game Execution Images
 
