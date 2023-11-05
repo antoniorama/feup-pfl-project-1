@@ -97,9 +97,13 @@ can_place_piece_test :-
 place_piece(Board, StartPos, Direction, Player, Piece, NewBoard):-
     calculate_position(Player, StartPos, StartX, StartY),
     calculate_pos_to_pos(Player, StartPos, NewPos),
+    format('PLAYER~w \n', [Player]),
     canBePlayed(Board, NewPos, Direction, Piece),
+    write('a2\n'),
     piece_info(NSquares, _, _, Player, Piece),
+    write('a3\n'),
     piece_default_square(Piece, DefaultSquare),
+    write('a4\n'),
     format("Square Display: ~w  NSquares: ~d  StartX: ~d  StartY: ~d \n" ,[DefaultSquare, NSquares, StartX, StartY]),
     place_direction(Board, DefaultSquare, StartX, StartY, NSquares, NewBoard, Direction).
 

@@ -228,9 +228,6 @@ piece_default_square(piece6_2, l6_).
 player_turn(dark_player, 0).
 player_turn(light_player, 1).
 player_turn(dark_player, 2).
-player_turn(light_player, 3).
-player_turn(dark_bot, 4).
-player_turn(light_bot, 5).
 
 % turn_phase(?TurnNO, ?Phase)
 turn_phase(0, placement_phase).
@@ -248,16 +245,16 @@ swap_turn(3, 2).
 swap_turn(4, 5).
 swap_turn(5, 4).
 
-% difficulty(?TurnNO, ?Level)
-difficulty(4, 1).
-difficulty(5, 1).
+% difficulty(?PlayerName, ?Level)
+difficulty(dark_bot1, 1).
+difficulty(light_bot1, 1).
 
-% is_player_bot(?TurnNo)
-is_player_bot(4).
-is_player_bot(5).
+% bot(?PlayerName)
+bot(dark_bot1).
+bot(light_bot1).
 
-bot_to_regular_player(dark_bot, dark_player).
-bot_to_regular_player(light_bot, light_player).
+bot_to_regular_player(dark_bot1, dark_player).
+bot_to_regular_player(light_bot1, light_player).
 
 bot_to_player_turn(0, 4).
 bot_to_player_turn(1, 5).
