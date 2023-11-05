@@ -99,6 +99,30 @@ square_info(dark_player, _, sc_dark, sdark).
 
 square_info(_, _, _, none).
 
+%withOrWithoutCounter(?PieceWithCounter, ?PieceWithoutCounter).
+
+withOrWithoutCounter(d1s, d1_).
+withOrWithoutCounter(d1S, d1_).
+withOrWithoutCounter(d2s, d2_).
+withOrWithoutCounter(d2S, d2_).
+withOrWithoutCounter(d3s, d3_).
+withOrWithoutCounter(d3S, d3_).
+withOrWithoutCounter(d4s, d4_).
+withOrWithoutCounter(d4S, d4_).
+withOrWithoutCounter(d6s, d6_).
+withOrWithoutCounter(d6S, d6_).
+
+withOrWithoutCounter(l1s, l1_).
+withOrWithoutCounter(l1S, l1_).
+withOrWithoutCounter(l2s, l2_).
+withOrWithoutCounter(l2S, l2_).
+withOrWithoutCounter(l3s, l3_).
+withOrWithoutCounter(l3S, l3_).
+withOrWithoutCounter(l4s, l4_).
+withOrWithoutCounter(l4S, l4_).
+withOrWithoutCounter(l6s, l6_).
+withOrWithoutCounter(l6S, l6_).
+
 % square_to_display(+Square, -Display)
 square_to_display(d1_, ' P1 ').
 square_to_display(d2_, ' P2 ').
