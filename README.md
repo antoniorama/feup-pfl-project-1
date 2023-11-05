@@ -125,7 +125,40 @@ initial_state([0, [PlacementPhasePiecesDark, [], 0, 0], [PlacementPhasePiecesLig
 
 ### Move Validation and Execution
 
-[Describe the predicate `move/3` for validating and executing a play.]
+The `move/3` predicate is a key component of the game's logic that processes and applies a player's move to the game state. It takes the current state and the player's move as input and produces a new game state that reflects the changes after the move.
+
+Predicate Definition:
+prolog
+Copy code
+move(+State, +Move, -NewState)
++State: The current game state before the move.
++Move: The player's move.
+-NewState: The game state after the move has been applied.
+
+Implementation Overview:
+The move/3 predicate handles two distinct phases of the game: the placement phase and the scoring phase. It uses the turn_phase/2 and player_turn/2 predicates to determine the current phase of the game and which player is making the move.
+
+Placement Phase Logic:
+
+The predicate first checks if the game is in the placement phase using turn_phase(TurnNO, placement_phase).
+It then verifies whose turn it is by calling player_turn(PlayerName, TurnNO).
+The piece placement is executed by place_piece/6, which takes the board, the specified square and direction, the player, the piece, and returns the updated board as NewBoard.
+The predicate get_new_state/6 is then called to construct the new state NewState after the piece has been placed.
+
+Scoring Phase Logic:
+
+If the game is in the scoring phase, determined by turn_phase(TurnNO, scoring_phase), it proceeds with scoring logic.
+The player_turn/2 predicate is again used to ascertain who is playing.
+A piece is removed from the board using the remove_piece/6 predicate, which similarly requires the current board, the piece in question, the target square, the player's name, and the direction for the move, resulting in NewBoard.
+The get_new_state/6 predicate is then invoked to generate the NewState, reflecting the updated board after the piece removal.
+Input Validation and Execution:
+move/3 inherently validates the move by using the game's rules defined in turn_phase/2, player_turn/2, place_piece/6, and remove_piece/6. If any of these steps fail, the move will not be executed, and the game state will not be updated, effectively enforcing the game's rules.
+
+New State Generation:
+The get_new_state/6 predicate is crucial for updating the game state. It must account for changes to the board, the active player's pieces, and possibly the score or other counters if the game is in the scoring phase.
+
+The move/3 predicate encapsulates the logic necessary to transition the game state from one turn to the next, based on the player's move. It handles different game phases and ensures moves are valid and executed according to the game's rules. The predicate relies on several helper predicates to manage the complexity of updating the game state, ensuring that the game logic is modular and maintainable.
+
 ```prolog
 % move(+State, +Move, -NewState)
 % Update the game state based on the move
