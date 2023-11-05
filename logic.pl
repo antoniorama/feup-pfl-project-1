@@ -426,7 +426,8 @@ placeScoreCounterDark(Board, NewBoard):-
 
 test_placeSC:-
     test_board3(_, Board),
-    placeScoreCounterDark(Board, NewBoard),
+    placeScoreCounterLight(Board, IntermediateBoard), % Apply the light counter
+    placeScoreCounterDark(IntermediateBoard, NewBoard), % Then apply the dark counter with the result from the first call
     display_header_coords(10, 10),
-    display_board(NewBoard, 9, 10),
+    display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
