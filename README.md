@@ -56,12 +56,47 @@ If any player cannot remove any of his tiles on his turn, he passes and is out o
 ### Game State Visualization
 
 [Describe how the game state display predicate `display_game/2` is implemented, including the user interface and input validation.]
-![display_game(+GameState)](https://github.com/antoniorama/pfl/assets/93871576/6306eb81-b83c-464d-a07c-c26f3186e04d)
+```prolog
+
+display_game([TurnNO,_,_,Board]) :-
+	clear_console,
+	Size is 10,
+	SizeMinusOne is Size - 1,
+	display_header_coords(Size, Size),
+  	display_board(Board, SizeMinusOne, Size),
+  	display_footer_coords(Size, Size), nl, nl, nl,
+	display_turn(TurnNO), nl.
+```
+
+```prolog
+% initial_state(-State)
+% initialize the state with turn to dark_player (0) and placement phase pieces
+initial_state([0, [PlacementPhasePiecesDark, [], 0, 0], [PlacementPhasePiecesLight, [], 0, 0], Board]) :-
+	test_board2(_, Board),
+	initial_dark_pieces(InitialDarkPieces),
+	append(InitialDarkPieces, [], PlacementPhasePiecesDark),
+	initial_light_pieces(InitialLightPieces),
+	append(InitialLightPieces, [], PlacementPhasePiecesLight).
+```
 
 ### Move Validation and Execution
 
 [Describe the predicate `move/3` for validating and executing a play.]
-![move(+GameState, +Move, -NewGameState)](https://github.com/antoniorama/pfl/assets/93871576/2c91140e-0823-4c58-b0ab-919133b6cc23)
+```prolog
+% move(+State, +Move, -NewState)
+% Update the game state based on the move
+move([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, _, _], LightPlayerInfo, Board], [Piece, Square, Direction], NewState) :-
+	turn_phase(TurnNO, placement_phase),
+	player_turn(PlayerName, TurnNO),
+	place_piece(Board, Square, Direction, PlayerName, Piece, NewBoard),
+	get_new_state([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, _, _], LightPlayerInfo, _], Piece, Square, Direction, NewBoard, NewState).
+
+move([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], [Piece, Square, Direction], NewState) :-
+	turn_phase(TurnNO, scoring_phase),
+	player_turn(PlayerName, TurnNO),
+	remove_piece(Board, Piece, Square, PlayerName, Direction, NewBoard),
+	get_new_state([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemovedLenghtDark], [PlacementPhasePiecesLight, PlacedPiecesLight, ScoreLight, PieceRemovedLengthLight], Board], Piece, Square, Direction, NewBoard, NewState).
+```
 
 
 ### List of Valid Moves
