@@ -1,4 +1,5 @@
 :- use_module(library(lists)).
+:- use_module(library(random)).
 
 % board(+Matrix)
 % Matrix representing the board
@@ -228,15 +229,37 @@ player_turn(dark_player, 0).
 player_turn(light_player, 1).
 player_turn(dark_player, 2).
 player_turn(light_player, 3).
+player_turn(dark_bot, 4).
+player_turn(light_bot, 5).
 
 % turn_phase(?TurnNO, ?Phase)
 turn_phase(0, placement_phase).
 turn_phase(1, placement_phase).
 turn_phase(2, scoring_phase).
 turn_phase(3, scoring_phase).
+turn_phase(4, placement_phase).
+turn_phase(5, placement_phase).
 
 % swap_turn(?CurrentTurn, ?NextTurn)
 swap_turn(0, 1).
 swap_turn(1, 0).
 swap_turn(2, 3).
 swap_turn(3, 2).
+swap_turn(4, 5).
+swap_turn(5, 4).
+
+% difficulty(?TurnNO, ?Level)
+difficulty(4, 1).
+difficulty(5, 1).
+
+% is_player_bot(?TurnNo)
+is_player_bot(4).
+is_player_bot(5).
+
+bot_to_regular_player(dark_bot, dark_player).
+bot_to_regular_player(light_bot, light_player).
+
+bot_to_player_turn(0, 4).
+bot_to_player_turn(1, 5).
+bot_to_player_turn(2, 6).
+bot_to_player_turn(3, 7).

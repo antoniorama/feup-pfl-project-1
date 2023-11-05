@@ -33,7 +33,7 @@ isOutOfBounds(StartPos, EndPos, vertical):-
     EndPos >= 0.
 
 % Checks if there is already a piece in those positions. use length. if start coordinates and end coordinates are diagonal it doesn't allow either
-% canBePlayed(+Board, +StartPos, +View, +Direction, +Piece)
+% canBePlayed(+Board, +StartPos, +Direction, +Piece)
 canBePlayed(Board, StartPos, Direction, Piece) :-
     % \+is_none(Board, StartPos),
     calculateEndPos(StartPos, Direction, Piece, EndPos),
