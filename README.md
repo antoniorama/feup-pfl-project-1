@@ -44,7 +44,7 @@ Scoring Phase:
 Both players start with zero points. The first player to pass in the Placement Phase begins the Scoring Phase, removing one tile at a time from the board. Each removed tile must be equal to or longer than the last one removed by that player. Tiles under score counters cannot be removed. Points are scored by multiplying the number on the removed tile by the count of tiles along the removal line, with multipliers applied if score counters are on this line. The score counter is then moved along a path, aiming to reach a score of 100 points.
 If any player cannot remove any of his tiles on his turn, he passes and is out of the game. The game ends when both players have passed.
 
-[Isaac official website] (https://www.iggamecenter.com) 
+[igGameCenter official website] (https://www.iggamecenter.com) 
 <br>
 [Isaac rule book] (https://www.iggamecenter.com/en/rules/isaac) 
 
