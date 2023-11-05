@@ -483,7 +483,8 @@ test_placeSC2:-
 %updateScoreCounter(+ScoreLight, +ScoreDark, +Board,  -NewBoard)
 
 updateScoreCounter(ScoreLight, ScoreDark, Board, NewBoard):-
-    findScoreCountersPositions(Board, 0, ScoreLight, ScoreDark, LightPos, DarkPos),
+    findScoreCountersPositions(Board, 0, _, _, LightPos, DarkPos),
+
     rewritePieceInBoard(Board, LightPos, IntermediateBoard1),         % Remove the old light score counter
     rewritePieceInBoard(IntermediateBoard1, DarkPos, IntermediateBoard2), % Remove the old dark score counter
     placeScoreCounterLight(IntermediateBoard2, ScoreLight, IntermediateBoard3),   % Place the new light score counter
