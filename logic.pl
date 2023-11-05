@@ -337,30 +337,34 @@ test_countScoreCountersInRow:-
      format('Final Score Counter: ~w', [FinalScoreCounter]).
 
 
-printEveryElementOfTheBoard(Board, Pos, LightPos, DarkPos, FinalLightPos, FinalDarkPos):-
+findScoreCountersPositions(Board, Pos, LightPos, DarkPos, FinalLightPos, FinalDarkPos):-
     element_at(Board, Pos, Element),
     square_info(_, _, none, Element),
-    format('~w ', [Element]),
     NewPos is Pos + 1,
-    printEveryElementOfTheBoard(Board, NewPos, LightPos, DarkPos, FinalLightPos, FinalDarkPos).
+    findScoreCountersPositions(Board, NewPos, LightPos, DarkPos, FinalLightPos, FinalDarkPos).
 
-printEveryElementOfTheBoard(Board, Pos, _, DarkPos, FinalLightPos, FinalDarkPos):-
+findScoreCountersPositions(Board, Pos, _, DarkPos, FinalLightPos, FinalDarkPos):-
     element_at(Board, Pos, Element),
     square_info(_, _, sc_light, Element),
-    format('~w ', [Element]),
     NewPos is Pos + 1,
-    printEveryElementOfTheBoard(Board, NewPos, Pos, DarkPos, FinalLightPos, FinalDarkPos).
+    findScoreCountersPositions(Board, NewPos, Pos, DarkPos, FinalLightPos, FinalDarkPos).
 
-printEveryElementOfTheBoard(Board, Pos, LightPos, _, FinalLightPos, FinalDarkPos):-
+findScoreCountersPositions(Board, Pos, LightPos, _, FinalLightPos, FinalDarkPos):-
     element_at(Board, Pos, Element),
     square_info(_, _, sc_dark, Element),
-    format('~w ', [Element]),
     NewPos is Pos + 1,
-    printEveryElementOfTheBoard(Board, NewPos, LightPos, Pos, FinalLightPos, FinalDarkPos).
+    findScoreCountersPositions(Board, NewPos, LightPos, Pos, FinalLightPos, FinalDarkPos).
 
-printEveryElementOfTheBoard(_, 100, LightPos, DarkPos, LightPos, DarkPos):- !.
+findScoreCountersPositions(_, 100, LightPos, DarkPos, ConvertedLightPos, ConvertedDarkPos):- 
+    calculate_position(light_player, LightPos, LightRow, LightColumn),
+    calculate_position(_player, DarkPos, DarkRow, DarkColumn), 
+    ConvertedLightRow is 90 - (LightRow * 10),
+    ConvertedDarkRow is 90 - (DarkRow * 10),
+    ConvertedLightPos is ConvertedLightRow + LightColumn,
+    ConvertedDarkPos is ConvertedDarkRow + DarkColumn.
 
-test_printEveryElementOfTheBoard:-
+
+test_findScoreCountersPositions:-
     test_board3(_, Board),
-    printEveryElementOfTheBoard(Board, 0, _, _, LightPos, DarkPos),
+    findScoreCountersPositions(Board, 0, _, _, LightPos, DarkPos),
     format('Light Position: ~w, Dark Position: ~w', [LightPos, DarkPos]).
