@@ -175,11 +175,11 @@ move([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemov
 
 ### List of Valid Moves
 
-[Detail how the list of possible moves is generated with the predicate `valid_moves/3`.]
+In evaluating the design architecture of our game, it becomes apparent that incorporating a comprehensive list of valid moves is impractical for the placement phase. This is primarily due to the extraordinarily vast array of potential move combinations inherent in the game's structure. The combinatorial explosion of possible player actions and interactions within the game environment yields a number of permutations that is not only immense but also computationally prohibitive to catalog. Attempting to enumerate and maintain such an extensive dataset would impose unnecessary constraints on system resources, thereby diminishing the game’s performance and scalability. Therefore, our approach has been to implement a dynamic move validation system that assesses the legality of a move within the context of the current game state, as opposed to relying on a static, pre-defined list of valid moves.
+In the scoring phase of the game the state already includes the list of moves that the player can make (the list of pieces he can remove from the board).
+
 
 ### End of Game
-
-[Explain the predicate `game_over/2` for checking the end of the game and determining the winner.]
 
 #### game_over/2:
 
