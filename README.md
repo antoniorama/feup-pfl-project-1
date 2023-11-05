@@ -55,7 +55,7 @@ If any player cannot remove any of his tiles on his turn, he passes and is out o
 
 ### Game State Visualization
 
-[Describe how the game state display predicate `display_game/2` is implemented, including the user interface and input validation.]
+#### display_game/2
 The `display_game/2` predicate serves as a key component in visualizing the game state in a textual form for the player. This predicate takes a single argument, which is a list containing the current turn number (TurnNO) and the current state of the game board (Board). The game board is represented as a list of lists, with each sublist representing a row on the board.
 
 The predicate is implemented as a sequence of calls to other predicates, each responsible for displaying different parts of the game interface. Below is an overview of how display_game/2 operates:
@@ -94,6 +94,23 @@ display_game([TurnNO,_,_,Board]) :-
   	display_footer_coords(Size, Size), nl, nl, nl,
 	display_turn(TurnNO), nl.
 ```
+
+#### initial_state/1
+The initial_state/1 predicate is responsible for setting up the game's initial state. It is critical in establishing the starting point of the game. This predicate is designed to be called without an argument and will unify its single argument with the initial state of the game. Here's an overview of its implementation:
+
+Turn Initialization: The game starts with the dark_player's turn, denoted by 0. This convention is part of the first element of the list that represents the game state.
+
+Placement Phase Initialization: The predicate initializes the game with a placement phase for both dark and light pieces. The structure [PlacementPhasePiecesDark, [], 0, 0] represents the dark player's pieces, where PlacementPhasePiecesDark is a list of dark pieces to be placed on the board, and the two 0s signify the initial score and the length of the last piece removed.
+
+Board Initialization: test_board2(_, Board) is called to retrieve a starting board configuration.
+
+Dark Pieces Setup: initial_dark_pieces(InitialDarkPieces) is invoked to obtain the list of initial dark pieces.
+
+Light Pieces Setup: Similarly, initial_light_pieces(InitialLightPieces) is called to obtain the initial light pieces.
+
+State Assembly: The complete game state is assembled into a single list comprising the current turn, the dark player's pieces, the light player's pieces, and the initial board layout.
+
+The initial_state/1 predicate's role is to create a consistent and reproducible starting point for the game. It ensures that all game components are initialized correctly before the game begins. This setup facilitates an organized start to the game logic, where the state of the game is clearly defined and easy to understand.
 
 ```prolog
 % initial_state(-State)
