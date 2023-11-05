@@ -54,7 +54,7 @@ test_board3(10, [
 	[l1_, d1_, d1_, d1_, l3_, l3_, d2_, d2_, d2_, d2_],
 	[d1_, d1_, d1_, none, l3_, l3_, l2_, l2_, l2_, l2_],
 	[l2_, l2_, l2_, l2_, l3_, l3_, d1_, d1_, d1_, none],
-	[d2_, d2_, d2_, d2_, l3_, l3_, l2_, l2_, l2_, l2S]
+	[d2_, d2_, d2_, d2_, l3_, l3_, l2_, l2_, l2_, l2_]
 ]).
 
 % square_info(?Player, ?Value, ?ScoreCounter, ?Square)

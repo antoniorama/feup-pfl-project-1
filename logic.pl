@@ -447,7 +447,6 @@ test_placeSC2:-
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
 
-
 %predicate that updates Score Counter's position on the board based on the score of the player
 %updateScoreCounter(+ScoreLight, +ScoreDark, +Board,  -NewBoard)
 
