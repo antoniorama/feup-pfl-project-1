@@ -501,51 +501,59 @@ test_updateScoreCounter:-
 
 
 % Base case of recursion: if the game is over, evaluate the utility of the board
-%minimax(+Position, +Depth, +Player, -Utility)
-minimax(Position, Depth, Player, Utility) :-
-    game_over(Position), !,
+% minimax(+Position, +Depth, +Player, -Utility, -Move)
+minimax(Position, _, Player, Utility, []) :-
+    game_over(Position),
+    !,
     evaluate(Position, Player, Utility).
 
 % Recursive case: if the game is not over, and it is the maximizer's turn
-%minimax(+Position, +Depth, +Player, -Utility)
-minimax(Position, Depth, maximizer, Utility) :-
+% minimax(+Position, +Depth, +Player, -Utility, -Move)
+minimax(Position, Depth, maximizer, BestUtility, BestMove) :-
     Depth > 0,
-    valid_moves(Position, maximizer, Moves), % Find all valid moves for the maximizer
+    valid_moves(Position, maximizer, Moves),
     NewDepth is Depth - 1,
-    find_best_move(Moves, NewDepth, maximizer, nil, Utility).
+    find_best_move(Moves, NewDepth, maximizer, -inf, [], BestUtility, BestMove).
 
 % Recursive case: if the game is not over, and it is the minimizer's turn
-%minimax(+Position, +Depth, +Player, -Utility)
-minimax(Position, Depth, minimizer, Utility) :-
+% minimax(+Position, +Depth, +Player, -Utility, -Move)
+minimax(Position, Depth, minimizer, BestUtility, BestMove) :-
     Depth > 0,
-    valid_moves(Position, minimizer, Moves), % Find all valid moves for the minimizer
+    valid_moves(Position, minimizer, Moves),
     NewDepth is Depth - 1,
-    find_best_move(Moves, NewDepth, minimizer, nil, Utility).
+    find_best_move(Moves, NewDepth, minimizer, inf, [], BestUtility, BestMove).
 
 % Evaluate a list of moves and find the best one, updating the best utility found so far
-%find_best_move(+Moves, +Depth, +Player, +CurrentBestUtility, -BestUtility)
-find_best_move([], _, _, BestUtility, BestUtility).
-find_best_move([Move|Moves], Depth, Player, CurrentBestUtility, BestUtility) :-
-    move(Position, Move, NewPosition), % Apply a move to the current position
-    switch_player(Player, NextPlayer), % Change the player
-    minimax(NewPosition, Depth, NextPlayer, Utility), % Recursive minimax to evaluate the move
-    update_best_utility(Utility, Move, Player, CurrentBestUtility, NewCurrentBestUtility),
-    find_best_move(Moves, Depth, Player, NewCurrentBestUtility, BestUtility).
+% find_best_move(+Moves, +Depth, +Player, +CurrentBestUtility, +CurrentBestMove, -BestUtility, -BestMove)
+find_best_move([], _, _, BestUtility, BestMove, BestUtility, BestMove).
+find_best_move([Move|Moves], Depth, Player, CurrentBestUtility, CurrentBestMove, BestUtility, BestMove) :-
+    move(Position, Move, NewPosition),
+    switch_player(Player, NextPlayer),
+    minimax(NewPosition, Depth, NextPlayer, Utility, _),
+    update_best_utility(Utility, Move, Player, CurrentBestUtility, CurrentBestMove, NewCurrentBestUtility, NewCurrentBestMove),
+    find_best_move(Moves, Depth, Player, NewCurrentBestUtility, NewCurrentBestMove, BestUtility, BestMove).
 
-% Update the best utility found so far
-%update_best_utility(+Utility, +Move, +Player, +CurrentBestUtility, -NewBestUtility)
-update_best_utility(Utility, Move, maximizer, nil, Utility-Move).
-update_best_utility(Utility, Move, maximizer, CurrentBestUtility-BestMove, NewBestUtility-BestMove) :-
-    Utility > CurrentBestUtility,
-    NewBestUtility = Utility.
-update_best_utility(Utility, Move, maximizer, BestUtility-BestMove, BestUtility-BestMove) :-
+% Update the best utility found so far for maximizer
+update_best_utility(Utility, Move, maximizer, CurrentBestUtility, _, Utility, Move) :-
+    greater_than(Utility, CurrentBestUtility).
+update_best_utility(Utility, Move, maximizer, BestUtility, BestMove, BestUtility, BestMove) :-
+    not_greater_than(Utility, BestUtility).
+
+% Update the best utility found so far for minimizer
+update_best_utility(Utility, Move, minimizer, CurrentBestUtility, _, Utility, Move) :-
+    less_than(Utility, CurrentBestUtility).
+update_best_utility(Utility, Move, minimizer, BestUtility, BestMove, BestUtility, BestMove) :-
+    not_less_than(Utility, BestUtility).
+
+% Helper predicates to compare utilities without using = or ==
+greater_than(Utility, CurrentBestUtility) :-
+    Utility > CurrentBestUtility.
+not_greater_than(Utility, BestUtility) :-
     Utility =< BestUtility.
 
-update_best_utility(Utility, Move, minimizer, nil, Utility-Move).
-update_best_utility(Utility, Move, minimizer, CurrentBestUtility-BestMove, NewBestUtility-BestMove) :-
-    Utility < CurrentBestUtility,
-    NewBestUtility = Utility.
-update_best_utility(Utility, Move, minimizer, BestUtility-BestMove, BestUtility-BestMove) :-
+less_than(Utility, CurrentBestUtility) :-
+    Utility < CurrentBestUtility.
+not_less_than(Utility, BestUtility) :-
     Utility >= BestUtility.
 
 % Switch player helper
@@ -558,6 +566,7 @@ switch_player(minimizer, maximizer).
 % move(Position, Move, NewPosition) - Applies a move to a position.
 % evaluate(Position, Player, Utility) - Evaluates the position for a player.
 
+
 % choose_move(+GameState, +Player, +Level, -Move)
 choose_move(GameState, Player, 1, Move) :-
     % For Level 1, select a random move
@@ -567,5 +576,4 @@ choose_move(GameState, Player, 1, Move) :-
 choose_move(GameState, Player, 2, Move) :-
     % For Level 2, use the minimax algorithm to select the best move
     determine_depth(Level, Depth), % You need to define how you determine the depth based on level or other factors
-    minimax(GameState, Depth, Player, Utility-Move),
-    !. % Cut to prevent backtracking once the best move is found
+    minimax(GameState, Depth, Player, Utility-Move).
