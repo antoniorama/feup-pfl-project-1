@@ -495,7 +495,7 @@ updateScoreCounter(ScoreLight, ScoreDark, Board, NewBoard):-
 
 test_updateScoreCounter:-
     test_board3(_, Board),
-    updateScoreCounter(1, 5, Board, NewBoard),
+    updateScoreCounter(51, 46, Board, NewBoard),
     display_header_coords(10, 10),
     display_board(NewBoard, 9, 10), % Display the board after both counters have been placed
     display_footer_coords(10, 10).
