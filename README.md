@@ -183,6 +183,21 @@ move([TurnNO, [PlacementPhasePiecesDark, PlacedPiecesDark, ScoreDark, PieceRemov
 ### End of Game
 
 [Explain the predicate `game_over/2` for checking the end of the game and determining the winner.]
+```prolog
+% game_over(+State, -Winner)
+% over by score
+game_over([_, [_,_, _, ScoreDark, _], _, _], dark_player) :-
+	ScoreDark >= 100.
+
+game_over([_, _, [_,_, _, ScoreLight, _], _], light_player) :-
+	ScoreLight >= 100.
+
+% over if both players can't play
+game_over(State, Winner) :- 
+	cannot_play(dark_player, State),
+	cannot_play(light_player, State),
+	get_winner(State, Winner).
+```
 
 ### Game State Evaluation
 
