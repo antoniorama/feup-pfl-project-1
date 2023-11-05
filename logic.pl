@@ -488,7 +488,9 @@ updateScoreCounter(ScoreLight, ScoreDark, Board, NewBoard):-
     rewritePieceInBoard(Board, LightPos, IntermediateBoard1),         % Remove the old light score counter
     rewritePieceInBoard(IntermediateBoard1, DarkPos, IntermediateBoard2), % Remove the old dark score counter
     placeScoreCounterLight(IntermediateBoard2, ScoreLight, IntermediateBoard3),   % Place the new light score counter
-    placeScoreCounterDark(IntermediateBoard3, ScoreDark, NewBoard).   % Place the new dark score counter
+    calculate_position(dark_player, ScoreDark, ScoreRow, ScoreColumn),
+    ConvertedScoreDark is ScoreRow * 10 + ScoreColumn,
+    placeScoreCounterDark(IntermediateBoard3, ConvertedScoreDark, NewBoard).   % Place the new dark score counter
 
 
 test_updateScoreCounter:-
