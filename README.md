@@ -56,6 +56,7 @@ If any player cannot remove any of his tiles on his turn, he passes and is out o
 ### Game State Visualization
 
 [Describe how the game state display predicate `display_game/2` is implemented, including the user interface and input validation.]
+![display_game(+GameState)](https://github.com/antoniorama/pfl/assets/93871576/6306eb81-b83c-464d-a07c-c26f3186e04d)
 
 ### Move Validation and Execution
 
