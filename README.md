@@ -333,5 +333,8 @@ In conclusion, this project not only provided a hands-on experience with Prolog 
 
 *Intermediate game state - Placement Phase.*
 
-![Final Game State](path/to/final_state_image.png)
+![Intermediate game state - Scoring Phase](https://github.com/antoniorama/pfl/assets/93871576/713bc36e-5dda-4699-b44c-5fed6088e220)
+
+*Intermediate game state - Scoring Phase.*
+
 *Final game state.*
