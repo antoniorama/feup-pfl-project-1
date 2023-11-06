@@ -337,4 +337,6 @@ In conclusion, this project not only provided a hands-on experience with Prolog 
 
 *Intermediate game state - Scoring Phase.*
 
+![Final game state](https://github.com/antoniorama/pfl/assets/93871576/8d5f7175-382b-441a-a863-c5b6ad8354a8)
+
 *Final game state.*
