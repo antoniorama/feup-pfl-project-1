@@ -1,13 +1,5 @@
 # ISAAC
 
-## Group Information
-
-- **Group Name**: Isaac_7
-- **Members**:
-  - Full Name: António Marujo Rama, Student Number: up2021*****,  Contribution: 50%
-  - Full Name: Miguel Pedrosa, Student Number: up202108809, Contribution: 50%
-## Installation and Execution
-
 ### Linux
 
 1. Ensure that SICStus Prolog 4.8 is installed on your system.
