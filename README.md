@@ -1,4 +1,6 @@
-# ISAAC
+# ISAAC - Functional and Logic Programming Project
+
+In the project me and my group partner developed the two-board player game ISAAC using Prolog logic programming language.
 
 ### Linux
 
